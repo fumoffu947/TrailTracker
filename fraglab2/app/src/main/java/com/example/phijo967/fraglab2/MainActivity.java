@@ -30,9 +30,6 @@ public class MainActivity extends FragmentActivity implements Facebook.OnFragmen
             getFragmentManager().beginTransaction()
                     .add(R.id.container, new Facebook())
                     .commit();
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new MainFrag())
-                    .commit();
         }
     }
 
