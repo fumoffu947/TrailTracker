@@ -1,23 +1,9 @@
 package com.example.phijo967.fraglab2;
 
-import android.support.v4.app.FragmentActivity;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.app.ActionBar;
-import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.view.LayoutInflater;
+import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.os.Build;
-import android.widget.AdapterView;
-import android.widget.Button;
-import android.widget.ListView;
-import android.widget.TextView;
-import android.widget.Toast;
-
-import java.util.ArrayList;
 
 
 public class MainActivity extends FragmentActivity implements Facebook.OnFragmentInteractionListener,MainFrag.OnFragmentInteractionListener {
@@ -28,7 +14,7 @@ public class MainActivity extends FragmentActivity implements Facebook.OnFragmen
         setContentView(R.layout.activity_main);
         if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new Facebook())
+                    .add(R.id.container, new MainFrag())
                     .commit();
         }
     }
