@@ -9,15 +9,15 @@
     <fragment
         android:layout_width="335dp"
         android:layout_height="fill_parent"
-        android:name="FirstFragment"
+        android:name="com.example.phijo967.fraglab2.MainFrag"
         android:id="@+id/fragment"
-        tools:layout="@layout/fragment_first" />
+        tools:layout="@layout/fragment_main2" />
 
     <fragment
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:name="SecondFragment"
+        android:name="com.example.phijo967.fraglab2.Facebook"
         android:id="@+id/fragment2"
-        tools:layout="@layout/fragment_second" />
+        tools:layout="@layout/facebook" />
 
 </GridLayout>
