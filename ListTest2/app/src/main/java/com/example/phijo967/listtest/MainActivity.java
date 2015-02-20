@@ -1,31 +1,37 @@
-package com.example.phijo967.fraglab2;
+package com.example.phijo967.listtest;
 
+import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.ActionBar;
+import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.ViewGroup;
+import android.os.Build;
 
 
-public class MainActivity extends FragmentActivity implements Facebook.OnFragmentInteractionListener,MainFrag.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
-        /*if (savedInstanceState == null) {
+        setContentView(R.layout.activity_main);
+        if (savedInstanceState == null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new MainFrag())
+                    .add(R.id.container, new ItemFragment())
                     .commit();
-        }*/
+        }
     }
 
 
- /*   @Override
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
-    }*/
+    }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -40,18 +46,5 @@ public class MainActivity extends FragmentActivity implements Facebook.OnFragmen
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void switchFrag(String data) {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, new MainFrag()).commit();
-    }
-
-
-    @Override
-    public void goFace(String name) {
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, new Facebook()).commit();
     }
 }
