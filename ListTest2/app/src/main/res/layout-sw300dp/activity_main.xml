@@ -7,7 +7,7 @@
     <fragment
         android:layout_width="0dp"
         android:layout_height="match_parent"
-        android:name="com.example.phijo967.listtest.ItemFragment"
+        android:id="@+id/test"
         android:layout_weight="1"/>
 
     <FrameLayout

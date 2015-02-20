@@ -18,11 +18,19 @@ public class MainActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (savedInstanceState == null) {
+        if (findViewById(R.id.test) != null) {
             getFragmentManager().beginTransaction()
-                    .add(R.id.container, new ItemFragment())
+                    .add(R.id.test, new MainFrag())
+                    .commit();
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new Facebook())
                     .commit();
         }
+        /*if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new Facebook())
+                    .commit();
+        }*/
     }
 
 

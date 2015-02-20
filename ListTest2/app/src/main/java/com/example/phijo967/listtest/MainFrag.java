@@ -25,7 +25,7 @@ public class MainFrag extends Fragment {
     // TODO: Rename and change types of parameters
 
 
-    private OnFragmentInteractionListener mListener;
+    //private OnFragmentInteractionListener mListener;
 
     /**
      * Use this factory method to create a new instance of
@@ -60,14 +60,7 @@ public class MainFrag extends Fragment {
         return inflater.inflate(R.layout.fragment_main2, container, false);
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
-        }
-    }
-
-    @Override
+   /* @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
@@ -76,13 +69,13 @@ public class MainFrag extends Fragment {
             throw new ClassCastException(activity.toString()
                     + " must implement OnFragmentInteractionListener");
         }
-    }
+    }*/
 
-    @Override
+   /* @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
-    }
+    }*/
 
     /**
      * This interface must be implemented by activities that contain this

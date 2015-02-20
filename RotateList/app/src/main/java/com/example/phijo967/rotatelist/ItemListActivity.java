@@ -67,6 +67,17 @@ public class ItemListActivity extends FragmentActivity
                         .replace(R.id.item_detail_container, new TestFrag())
                         .commit();
 
+
+            }
+            else if (id=="1") {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.item_detail_container, new Faceboook())
+                        .commit();
+            }
+            else if (id=="3") {
+                getFragmentManager().beginTransaction()
+                        .replace(R.id.item_detail_container, new Black())
+                        .commit();
             }else {
             Bundle arguments = new Bundle();
             arguments.putString(ItemDetailFragment.ARG_ITEM_ID, id);
