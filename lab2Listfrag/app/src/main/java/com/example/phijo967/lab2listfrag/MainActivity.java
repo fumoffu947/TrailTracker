@@ -1,21 +1,26 @@
 package com.example.phijo967.lab2listfrag;
 
+import android.app.FragmentTransaction;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
 
-public class MainActivity extends ActionBarActivity implements ListItemFragment.OnFragmentInteractionListener {
+public class MainActivity extends ActionBarActivity implements ListItemFragment.OnFragmentInteractionListener
+        , DetailedItemFragment.OnFragmentInteractionListener {
+
+    public static Boolean dualFrag = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        if (findViewById(R.id.container) != null) {
+        if (findViewById(R.id.item_list) == null) {
             getFragmentManager().beginTransaction().
                     add(R.id.container, new ListItemFragment()).commit();
         }
+        else{dualFrag=true;}
     }
 
 
@@ -47,10 +52,18 @@ public class MainActivity extends ActionBarActivity implements ListItemFragment.
         arguments.putString(DetailedItemFragment.ARG_PARAM1, id);
         DetailedItemFragment fragment = new DetailedItemFragment();
         fragment.setArguments(arguments);
-        getFragmentManager().beginTransaction()
-                .replace(R.id.container, fragment)
-                .commit();
+        FragmentTransaction ft = getFragmentManager().beginTransaction();
+        ft.replace(R.id.container, fragment);
+        ft.addToBackStack(null);
+        ft.commit();
+
     }
 
+    @Override
+    public void switchBack() {
+        getFragmentManager().beginTransaction()
+                .replace(R.id.container, new ListItemFragment())
+                .commit();
+    }
 }
 
