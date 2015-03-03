@@ -66,7 +66,7 @@ public class DetailedItemFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detailed_item, container, false);
         if (myItem != null) {
-            ((TextView) view.findViewById(R.id.item_detail)).setText(myItem.info);
+            ((TextView) view.findViewById(R.id.item_detail)).setText(myItem.members);
             ((TextView) view.findViewById(R.id.hedder)).setText(myItem.content);
         }
         Button button = (Button) view.findViewById(R.id.button);

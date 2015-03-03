@@ -1,14 +1,18 @@
 package com.example.phijo967.lab2listfrag;
 
 import android.app.FragmentTransaction;
+import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+
 
 public class MainActivity extends ActionBarActivity implements ListItemFragment.OnFragmentInteractionListener
-        , DetailedItemFragment.OnFragmentInteractionListener {
+        , DetailedItemFragment.OnFragmentInteractionListener{
 
     public static Boolean dualFrag = false;
 
@@ -16,11 +20,31 @@ public class MainActivity extends ActionBarActivity implements ListItemFragment.
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        StrictMode.ThreadPolicy policy = new StrictMode.
+                ThreadPolicy.Builder().permitAll().build(); // fixar sa man far gora internet anrop pa annan trad
+        StrictMode.setThreadPolicy(policy);
         if (findViewById(R.id.item_list) == null) {
             getFragmentManager().beginTransaction().
                     add(R.id.container, new ListItemFragment()).commit();
+        } else {
+            dualFrag = true;
         }
-        else{dualFrag=true;}
+
+
+        JSONArray seq = null;
+        try {
+            seq = NetworkCalls.getGroups(NetworkCalls.doNetworkCall(""));
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        for (int index = 0; index < seq.length(); index++) {
+            try {
+                NetworkCalls.createContent(seq.getString(index), index);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
 
@@ -65,5 +89,8 @@ public class MainActivity extends ActionBarActivity implements ListItemFragment.
                 .replace(R.id.container, new ListItemFragment())
                 .commit();
     }
-}
 
+
+
+
+}

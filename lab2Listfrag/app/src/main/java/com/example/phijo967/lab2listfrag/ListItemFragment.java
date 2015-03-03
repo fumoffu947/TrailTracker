@@ -15,6 +15,10 @@ import android.widget.TextView;
 
 import com.example.phijo967.lab2listfrag.content.ExampleContent;
 
+import org.json.JSONException;
+
+import java.util.Arrays;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -46,7 +50,7 @@ public class ListItemFragment extends Fragment implements AbsListView.OnItemClic
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    private ArrayAdapter mAdapter;
 
     // TODO: Rename and change types of parameters
     public static ListItemFragment newInstance(String param1, String param2) {
@@ -76,8 +80,10 @@ public class ListItemFragment extends Fragment implements AbsListView.OnItemClic
 
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<ExampleContent.TestItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, ExampleContent.ITEMS);
+                android.R.layout.simple_list_item_1, android.R.id.text1,ExampleContent.ITEMS);
+
     }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -148,5 +154,6 @@ public class ListItemFragment extends Fragment implements AbsListView.OnItemClic
         // TODO: Update argument type and name
         public void onFragmentInteraction(String id);
     }
+
 
 }
