@@ -53,7 +53,7 @@ public class NetworkCalls {
         return new JSONArray();
     }
 
-    public static void createContent(String group,int id) throws JSONException {
+    public static void createAddContent(String group, int id) throws JSONException {
         JSONObject jObj = new JSONObject(doNetworkCall("/"+group));
         JSONArray array = jObj.getJSONArray(jObj.keys().next());
         if (array.length() >0) {

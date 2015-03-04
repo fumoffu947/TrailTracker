@@ -2,6 +2,10 @@ package com.example.phijo967.lab2listfrag.content;
 
 import android.os.AsyncTask;
 
+import com.example.phijo967.lab2listfrag.NetworkCalls;
+
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -29,7 +33,8 @@ public class ExampleContent {
 
 
     /*static {
-        // Add 3 sample items.
+
+         //Add 3 sample items.
         addItem(new TestItem("1", "FaceBook","facebook likes are 5"));
         addItem(new TestItem("2", "Twitter","twitter members are manny"));
         addItem(new TestItem("3", "FlashBack","to manny anwsers"));

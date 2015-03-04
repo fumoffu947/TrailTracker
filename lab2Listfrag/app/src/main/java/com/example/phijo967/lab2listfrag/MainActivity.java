@@ -1,49 +1,61 @@
 package com.example.phijo967.lab2listfrag;
 
+import android.app.Activity;
+import android.app.FragmentManager;
 import android.app.FragmentTransaction;
+import android.os.Bundle;
 import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 
 
-public class MainActivity extends ActionBarActivity implements ListItemFragment.OnFragmentInteractionListener
+public class MainActivity extends  Activity implements ListItemFragment.OnFragmentInteractionListener
         , DetailedItemFragment.OnFragmentInteractionListener{
 
     public static Boolean dualFrag = false;
+    private RetainedFragment retainedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        FragmentManager fm = getFragmentManager();
+        retainedFragment = (RetainedFragment) fm.findFragmentByTag("data");
         StrictMode.ThreadPolicy policy = new StrictMode.
                 ThreadPolicy.Builder().permitAll().build(); // fixar sa man far gora internet anrop pa annan trad
         StrictMode.setThreadPolicy(policy);
         if (findViewById(R.id.item_list) == null) {
+            dualFrag = false;
             getFragmentManager().beginTransaction().
-                    add(R.id.container, new ListItemFragment()).commit();
+                    replace(R.id.container, new ListItemFragment(), "listFrag").commit();
         } else {
             dualFrag = true;
         }
-
-
-        JSONArray seq = null;
-        try {
-            seq = NetworkCalls.getGroups(NetworkCalls.doNetworkCall(""));
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (retainedFragment == null) {
+            retainedFragment = new RetainedFragment();
+            fm.beginTransaction().add(retainedFragment, "data").commit();
+            retainedFragment.setData(false);
         }
-        for (int index = 0; index < seq.length(); index++) {
+        if (!retainedFragment.getData()) {
+            retainedFragment.setData(true);
+            JSONArray seq = null;
             try {
-                NetworkCalls.createContent(seq.getString(index), index);
+                seq = NetworkCalls.getGroups(NetworkCalls.doNetworkCall(""));
             } catch (JSONException e) {
                 e.printStackTrace();
             }
+            for (int index = 0; index < seq.length(); index++) {
+                try {
+                    NetworkCalls.createAddContent(seq.getString(index), index);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
         }
+
 
     }
 

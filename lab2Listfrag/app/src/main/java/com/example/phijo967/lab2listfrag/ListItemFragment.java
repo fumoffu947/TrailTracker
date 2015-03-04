@@ -80,7 +80,7 @@ public class ListItemFragment extends Fragment implements AbsListView.OnItemClic
 
         // TODO: Change Adapter to display your content
         mAdapter = new ArrayAdapter<ExampleContent.TestItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1,ExampleContent.ITEMS);
+                android.R.layout.simple_list_item_1, android.R.id.text1, ExampleContent.ITEMS);
 
     }
 
