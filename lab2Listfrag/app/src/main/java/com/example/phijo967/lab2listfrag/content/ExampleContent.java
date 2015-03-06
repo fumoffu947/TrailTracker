@@ -31,6 +31,15 @@ public class ExampleContent {
      */
     public static Map<String, TestItem> ITEM_MAP = new HashMap<String, TestItem>();
 
+    public static Boolean hasloaded = false;
+
+    public static Boolean getHasloaded() {
+        return hasloaded;
+    }
+
+    public static void setHasloaded(Boolean hasloaded) {
+        ExampleContent.hasloaded = hasloaded;
+    }
 
     /*static {
 

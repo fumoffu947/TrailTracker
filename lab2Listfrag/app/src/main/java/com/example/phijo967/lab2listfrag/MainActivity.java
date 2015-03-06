@@ -8,6 +8,9 @@ import android.os.StrictMode;
 import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import com.example.phijo967.lab2listfrag.content.ExampleContent;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 
@@ -16,14 +19,12 @@ public class MainActivity extends  Activity implements ListItemFragment.OnFragme
         , DetailedItemFragment.OnFragmentInteractionListener{
 
     public static Boolean dualFrag = false;
-    private RetainedFragment retainedFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         FragmentManager fm = getFragmentManager();
-        retainedFragment = (RetainedFragment) fm.findFragmentByTag("data");
         StrictMode.ThreadPolicy policy = new StrictMode.
                 ThreadPolicy.Builder().permitAll().build(); // fixar sa man far gora internet anrop pa annan trad
         StrictMode.setThreadPolicy(policy);
@@ -34,13 +35,9 @@ public class MainActivity extends  Activity implements ListItemFragment.OnFragme
         } else {
             dualFrag = true;
         }
-        if (retainedFragment == null) {
-            retainedFragment = new RetainedFragment();
-            fm.beginTransaction().add(retainedFragment, "data").commit();
-            retainedFragment.setData(false);
-        }
-        if (!retainedFragment.getData()) {
-            retainedFragment.setData(true);
+
+        if (ExampleContent.getHasloaded() != true) {
+            ExampleContent.setHasloaded(true);
             JSONArray seq = null;
             try {
                 seq = NetworkCalls.getGroups(NetworkCalls.doNetworkCall(""));
