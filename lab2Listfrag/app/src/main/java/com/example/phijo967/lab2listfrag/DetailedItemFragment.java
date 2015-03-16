@@ -70,13 +70,13 @@ public class DetailedItemFragment extends Fragment {
             ((TextView) view.findViewById(R.id.item_detail)).setText(myItem.info);
         }
 
-        Button button = (Button) view.findViewById(R.id.button);
+        /*Button button = (Button) view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onButtonPressed();
             }
-        });
+        });*/
 
         return view;
     }
