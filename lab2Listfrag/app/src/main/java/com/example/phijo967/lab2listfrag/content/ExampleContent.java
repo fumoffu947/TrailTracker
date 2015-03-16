@@ -1,5 +1,13 @@
 package com.example.phijo967.lab2listfrag.content;
 
+import android.os.AsyncTask;
+
+import com.example.phijo967.lab2listfrag.NetworkCalls;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,39 +22,48 @@ import java.util.Map;
 public class ExampleContent {
 
     /**
-     * An array of sample (dummy) items.
+     * An array of sample  items.
      */
     public static List<TestItem> ITEMS = new ArrayList<TestItem>();
 
     /**
-     * A map of sample (dummy) items, by ID.
+     * A map of sample  items, by ID.
      */
     public static Map<String, TestItem> ITEM_MAP = new HashMap<String, TestItem>();
 
-    static {
-        // Add 3 sample items.
+    public static Boolean hasloaded = false;
+
+    public static Boolean getHasloaded() {
+        return hasloaded;
+    }
+
+    public static void setHasloaded(Boolean hasloaded) {
+        ExampleContent.hasloaded = hasloaded;
+    }
+
+    /*static {
+
+         //Add 3 sample items.
         addItem(new TestItem("1", "FaceBook","facebook likes are 5"));
         addItem(new TestItem("2", "Twitter","twitter members are manny"));
         addItem(new TestItem("3", "FlashBack","to manny anwsers"));
-    }
+    }*/
 
-    private static void addItem(TestItem item) {
+    public static void addItem(TestItem item) {
         ITEMS.add(item);
         ITEM_MAP.put(item.id, item);
     }
 
-    /**
-     * A dummy item representing a piece of content.
-     */
     public static class TestItem {
-        public String info;
+        public String members;
+        public String name;
         public String id;
         public String content;
 
-        public TestItem(String id, String content, String info) {
+        public TestItem(String id, String content, String members) {
             this.id = id;
             this.content = content;
-            this.info = info;
+            this.members = members;
         }
 
         @Override
@@ -55,3 +72,6 @@ public class ExampleContent {
         }
     }
 }
+
+
+

@@ -1,7 +1,6 @@
 package com.example.phijo967.lab2listfrag;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -41,7 +40,7 @@ public class DetailedItemFragment extends Fragment {
      * @return A new instance of fragment DetailedItemFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DetailedItemFragment newInstance(String param1, String param2) {
+    public static DetailedItemFragment newInstance(String param1) {
         DetailedItemFragment fragment = new DetailedItemFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
@@ -67,8 +66,10 @@ public class DetailedItemFragment extends Fragment {
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_detailed_item, container, false);
         if (myItem != null) {
-            ((TextView) view.findViewById(R.id.item_detail)).setText(myItem.info);
+            ((TextView) view.findViewById(R.id.item_detail)).setText(myItem.members);
+            ((TextView) view.findViewById(R.id.hedder)).setText(myItem.content);
         }
+<<<<<<< HEAD
 
         /*Button button = (Button) view.findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -78,13 +79,26 @@ public class DetailedItemFragment extends Fragment {
             }
         });*/
 
+=======
+        Button button = (Button) view.findViewById(R.id.button);
+        if (!MainActivity.dualFrag) {
+
+            button.setVisibility(view.VISIBLE);
+            button.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onButtonPressed();
+                }
+            });
+        }else {button.setVisibility(View.INVISIBLE);}
+>>>>>>> ada1f2bc97ea85575c0b0d7e4698b60299de43ee
         return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed() {
         if (mListener != null) {
-            mListener.onFragmentInteraction();
+            mListener.switchBack();
         }
     }
 
@@ -117,7 +131,7 @@ public class DetailedItemFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction();
+        public void switchBack();
     }
 
 }
