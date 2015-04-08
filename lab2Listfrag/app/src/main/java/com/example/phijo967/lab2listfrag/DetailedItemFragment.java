@@ -69,17 +69,6 @@ public class DetailedItemFragment extends Fragment {
             ((TextView) view.findViewById(R.id.item_detail)).setText(myItem.members);
             ((TextView) view.findViewById(R.id.hedder)).setText(myItem.content);
         }
-<<<<<<< HEAD
-
-        /*Button button = (Button) view.findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onButtonPressed();
-            }
-        });*/
-
-=======
         Button button = (Button) view.findViewById(R.id.button);
         if (!MainActivity.dualFrag) {
 
@@ -91,7 +80,6 @@ public class DetailedItemFragment extends Fragment {
                 }
             });
         }else {button.setVisibility(View.INVISIBLE);}
->>>>>>> ada1f2bc97ea85575c0b0d7e4698b60299de43ee
         return view;
     }
 
