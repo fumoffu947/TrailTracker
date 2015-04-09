@@ -45,6 +45,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     private Location mLastLocation;
     private TextView locationText;
     private String mCurrentPhotoPath;
+    private String troll;
+    private ImageView mImageView2;
 
 
     @Override
@@ -55,6 +57,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         mGoogleApiClient.connect();
         locationText = (TextView) findViewById(R.id.textView2);
         mImageView = (ImageView) findViewById(R.id.imageView);
+        this.mImageView2 = (ImageView) findViewById(R.id.imageView2);
         Button button = (Button) findViewById(R.id.button);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -79,13 +82,19 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     }
 
-    public File createImageFile() throws IOException{
+    public File createImageFile() {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
                 Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName, ".jpg", storageDir);
+        File image = null;
+        try {
+            image = File.createTempFile(
+                    imageFileName, ".jpg", storageDir);
+        } catch (IOException e) {
+            e.printStackTrace();
+            System.out.println("could not make file");
+        }
         this.mCurrentPhotoPath = "file:" + image.getAbsolutePath();
         return image;
     }
@@ -94,11 +103,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePicture.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }if (photoFile != null) {
+            photoFile = createImageFile();
+            if (photoFile != null) {
                 takePicture.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(photoFile));
                 startActivityForResult(takePicture, REQUEST_IMAGE_CAPTURE);
             }
@@ -122,7 +128,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         bmOptions.inPurgeable = true;
 
         Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        mImageView.setImageBitmap(bitmap);
+        mImageView2.setImageBitmap(bitmap);
     }
 
     @Override
