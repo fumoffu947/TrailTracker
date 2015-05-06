@@ -23,7 +23,7 @@ import java.net.URLEncoder;
  */
 public class HttpClient {
 
-    private static String uriToServer = "http://flask-projekt.openshift.ida.liu.se/user";
+    private static String uriToServer = "http://flask-projekt.openshift.ida.liu.se/login";
 
     public static Object sendAPost(JSONObject jsonObject) throws IOException {
         HttpURLConnection urlConnection = null;

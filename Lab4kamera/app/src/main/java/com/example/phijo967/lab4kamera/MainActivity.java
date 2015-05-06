@@ -216,7 +216,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         protected String doInBackground(String... params) {
             JSONObject jO = new JSONObject();
             try {
-                jO.put("id_u",1);
+                jO.put("username","test");
+                jO.put("pasword","test1");
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -232,7 +233,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
         @Override
         protected void onPreExecute() {
-            System.out.println("222222222222222222222222222222222222222222222222222222222222222222222222222222222222222");
+            System.out.println("5555555555555555555555555555555555555555555555555555555555555555555555");
             super.onPreExecute();
         }
     }
