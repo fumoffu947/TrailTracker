@@ -34,6 +34,9 @@
         android:id="@+id/imageView2"
         android:layout_below="@+id/imageView"
         android:layout_toEndOf="@+id/textView2"
-        android:layout_marginTop="86dp" />
+        android:layout_marginTop="86dp"
+        android:maxWidth="1000dp"
+        android:maxHeight="1000dp"
+        android:longClickable="false" />
 
 </RelativeLayout>

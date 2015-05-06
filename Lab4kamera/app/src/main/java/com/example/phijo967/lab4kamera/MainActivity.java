@@ -6,29 +6,25 @@ import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.provider.MediaStore;
-import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
+import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.internal.bm;
 import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,10 +61,12 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 takePic();
             }
         });
+        SendHttpRequestTask task = new SendHttpRequestTask();
+        task.execute("test");
     }
 
 
-    protected synchronized void buildGoogleApiClient() {
+    protected synchronized void buildGoogleApiClient() { // starts the googleappClient so that i have access to it so i can look for an location
         System.out.println("googleBuilder");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -83,6 +81,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     public File createImageFile() {
+        //creates a file to store the picture in so i can access the image and send it att a later point
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
@@ -95,11 +94,11 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             e.printStackTrace();
             System.out.println("could not make file");
         }
-        this.mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        this.mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    private void dispatchTakePictureIntent() {
+    private void dispatchTakePictureIntent() {// starts an imagecapture intent so i can take an picture with the camera an use the pic
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePicture.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
@@ -112,23 +111,29 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     private void setPic() {
-        int targetW = mImageView.getMaxWidth();
-        int targetH = mImageView.getMaxHeight();
+        int targetW = mImageView2.getMaxWidth();
+        int targetH = mImageView2.getMaxHeight();
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
+        int photoW = bmOptions.outWidth; // get the photo width and height
         int photoH = bmOptions.outHeight;
 
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+        int scaleFactor = Math.max(photoW / targetW, photoH / targetH);
+        if (scaleFactor == 1) {
+            if (photoH > targetH || photoW > targetW) {
+                scaleFactor = 2; // sets the scaleFactor to 2 if the immage is wider or higer than
+                                //(my cellphones max bit image size to set in an imageview)
+            }
+        }
 
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        mImageView2.setImageBitmap(bitmap);
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions); //returns a scaled copy of the image
+         mImageView2.setImageBitmap(bitmap);
     }
 
     @Override
@@ -203,5 +208,32 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         System.out.println("connection faild");
+    }
+
+    private class SendHttpRequestTask extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            JSONObject jO = new JSONObject();
+            try {
+                jO.put("id_u",1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println(jO.toString());
+                HttpClient.sendAPost(jO);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            System.out.println("222222222222222222222222222222222222222222222222222222222222222222222222222222222222222");
+            super.onPreExecute();
+        }
     }
 }
