@@ -224,6 +224,10 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         System.out.println("connection faild");
     }
 
+    public void signUpFragment(View view) {
+        // Transition to signUp Fragment
+    }
+
     private class SendHttpRequestTask extends AsyncTask<HashMap<String, JSONObject>,String,JSONObject> {
 
         @Override
