@@ -8,6 +8,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationManager;
 import android.net.Uri;
+import android.os.AsyncTask;
 import android.os.Environment;
 import android.os.Handler;
 import android.os.ResultReceiver;
@@ -29,6 +30,9 @@ import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.internal.bm;
 import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
@@ -65,6 +69,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 takePic();
             }
         });
+        SendHttpRequestTask task = new SendHttpRequestTask();
+        task.execute("test");
     }
 
 
@@ -203,5 +209,32 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         System.out.println("connection faild");
+    }
+
+    private class SendHttpRequestTask extends AsyncTask<String,String,String> {
+
+        @Override
+        protected String doInBackground(String... params) {
+            JSONObject jO = new JSONObject();
+            try {
+                jO.put("id_u",1);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            try {
+                System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println(jO.toString());
+                HttpClient.sendAPost(jO);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            return null;
+        }
+
+        @Override
+        protected void onPreExecute() {
+            System.out.println("222222222222222222222222222222222222222222222222222222222222222222222222222222222222222");
+            super.onPreExecute();
+        }
     }
 }
