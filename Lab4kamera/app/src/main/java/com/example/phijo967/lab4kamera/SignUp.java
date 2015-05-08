@@ -7,12 +7,19 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SignUp.OnFragmentInteractionListener} interface
+ * {@link com.example.phijo967.lab4kamera.SignUp.OnSignUpInteractionListener} interface
  * to handle interaction events.
  * Use the {@link SignUp#newInstance} factory method to
  * create an instance of this fragment.
@@ -27,7 +34,8 @@ public class SignUp extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnSignUpInteractionListener mListener;
+    private HttpPostExecute httpPostExecute;
 
     /**
      * Use this factory method to create a new instance of
@@ -58,13 +66,47 @@ public class SignUp extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        this.httpPostExecute = new HttpPostExecute() {
+            @Override
+            public void httpOnPostExecute(JSONObject jsonObject) {
+
+            }
+        };
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sign_up, container, false);
+        final View rootView = inflater.inflate(R.layout.fragment_sign_up, container, false);
+
+        Button button = (Button) rootView.findViewById(R.id.signUpButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                EditText name = (EditText) rootView.findViewById(R.id.signUpNameEdit);
+                EditText lastname = (EditText) rootView.findViewById(R.id.signUpLastNameEdit);
+                EditText email = (EditText) rootView.findViewById(R.id.signUpEmailEdit);
+                EditText username = (EditText) rootView.findViewById(R.id.signUpUsernameEdit);
+                EditText password = (EditText) rootView.findViewById(R.id.signUpPasswordEdit);
+
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("name",name.getText().toString());
+                    jsonObject.put("lastname",lastname.getText().toString());
+                    jsonObject.put("email",email.getText().toString());
+                    jsonObject.put("username", username.getText().toString());
+                    jsonObject.put("password", password.getText().toString());
+                    HashMap<String,JSONObject> map = new HashMap();
+                    map.put("adduser",jsonObject);
+                    SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
+                    task.execute(map);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -78,10 +120,10 @@ public class SignUp extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnSignUpInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnSignUpInteractionListener");
         }
     }
 
@@ -101,7 +143,7 @@ public class SignUp extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnSignUpInteractionListener {
         // TODO: Update argument type and name
         public void onFragmentInteraction(Uri uri);
     }

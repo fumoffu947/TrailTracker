@@ -1,18 +1,25 @@
 package com.example.phijo967.lab4kamera;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link LoginScreen.OnFragmentInteractionListener} interface
+ * {@link LoginScreen.OnLoginInteractionListener} interface
  * to handle interaction events.
  * Use the {@link LoginScreen#newInstance} factory method to
  * create an instance of this fragment.
@@ -27,7 +34,11 @@ public class LoginScreen extends Fragment {
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnLoginInteractionListener mListener;
+    private HttpPostExecute httpPostExecute;
+
+    private String username;
+    private String password;
 
     /**
      * Use this factory method to create a new instance of
@@ -54,6 +65,30 @@ public class LoginScreen extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        this.httpPostExecute = new HttpPostExecute() {
+            @Override
+            public void httpOnPostExecute(JSONObject jsonObject) {
+                System.out.println("httpPostExecute!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                System.out.println(jsonObject.toString());
+                String result = JSonParse.loginResult(jsonObject);
+                switch (result) {
+                    case "usernameError":
+                        Toast.makeText(getActivity(),"Wrong Username",Toast.LENGTH_SHORT).show();
+                        break;
+                    case "passwordError":
+                        Toast.makeText(getActivity(),"Wrong Password",Toast.LENGTH_SHORT).show();
+                        break;
+                    default:
+                        int id_u = Integer.getInteger(result,-2);
+                        if (id_u == -2) {
+                            Toast.makeText(getActivity(),"Couldn't get the User", Toast.LENGTH_SHORT).show();
+                            Toast.makeText(getActivity(),"Please try again later", Toast.LENGTH_LONG).show();
+                        } else {
+                            onInteraction(username,password);
+                        }
+                }
+            }
+        };
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
@@ -63,14 +98,45 @@ public class LoginScreen extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_login_screen, container, false);
+        // Inflate the layout for this fragmentu
+        final View rootView = inflater.inflate(R.layout.fragment_login_screen, container, false);
+
+        final String[] username = new String[1];
+        final String[] password = new String[1];
+
+        Button button = (Button) rootView.findViewById(R.id.loginbutton);
+        button.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                System.out.println("onClick");
+                EditText usernameE = (EditText) rootView.findViewById(R.id.signUpUsernameEdit);
+                EditText passwordE = (EditText) rootView.findViewById(R.id.signUpPasswordEdit);
+                username[0] = usernameE.getText().toString();
+                password[0] = passwordE.getText().toString();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("username", username[0]);
+                    jsonObject.put("password", password[0]);
+                    HashMap<String,JSONObject> map = new HashMap();
+                    map.put("login",jsonObject);
+                    SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
+                    task.execute(map);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        this.username = username[0];
+        this.password = password[0];
+
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onInteraction(String username, String password) {// False is go to Profile
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onLoginInteraction(username, password);
         }
     }
 
@@ -78,10 +144,10 @@ public class LoginScreen extends Fragment {
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnLoginInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnLoginInteractionListener");
         }
     }
 
@@ -102,9 +168,9 @@ public class LoginScreen extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnLoginInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onLoginInteraction(String username, String password);
     }
 
 }

@@ -24,12 +24,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Name"
-            android:id="@+id/textView3" />
+            android:id="@+id/signUpNameText" />
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/editText" />
+            android:id="@+id/signUpNameEdit"
+            android:hint="Name"/>
     </LinearLayout>
 
     <LinearLayout
@@ -108,7 +109,16 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Signup"
-        android:id="@+id/button3"
+        android:id="@+id/signUpButton"
         android:layout_gravity="center_horizontal" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="Back"
+        android:clickable="true"
+        android:onClick="backToLogin"
+        android:id="@+id/signUpBackText"
+        android:textAppearance="?android:attr/textAppearanceMedium"/>
 
 </LinearLayout>

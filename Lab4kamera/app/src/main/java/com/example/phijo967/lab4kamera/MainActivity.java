@@ -7,7 +7,6 @@ import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -15,9 +14,9 @@ import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -31,13 +30,11 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
-import java.util.Set;
 
 
-public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LoginScreen.OnLoginInteractionListener,SignUp.OnSignUpInteractionListener {
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView mImageView;
     private GoogleApiClient mGoogleApiClient;
@@ -46,6 +43,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     private String mCurrentPhotoPath;
     private String troll;
     private ImageView mImageView2;
+    private HttpPostExecute httpPostExecute;
 
 
     @Override
@@ -54,6 +52,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
         buildGoogleApiClient();
         mGoogleApiClient.connect();
+        getFragmentManager().beginTransaction().add(R.id.main,new LoginScreen(), "login").commit();
         //locationText = (TextView) findViewById(R.id.textView2);
         //mImageView = (ImageView) findViewById(R.id.imageView);
         //this.mImageView2 = (ImageView) findViewById(R.id.imageView2);
@@ -65,7 +64,14 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             }
         });*/
 
-        SendHttpRequestTask task = new SendHttpRequestTask();
+        this.httpPostExecute = new HttpPostExecute() {
+            @Override
+            public void httpOnPostExecute(JSONObject jsonObject) {
+                System.out.println(jsonObject.toString());
+            }
+        };
+
+        SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
         HashMap<String, JSONObject> map = new HashMap<>();
         JSONObject jsonObject = new JSONObject();
         try {
@@ -225,43 +231,24 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     public void signUpFragment(View view) {
-        // Transition to signUp Fragment
+        getFragmentManager().beginTransaction().replace(R.id.main, new SignUp()).commit();
     }
 
-    private class SendHttpRequestTask extends AsyncTask<HashMap<String, JSONObject>,String,JSONObject> {
+    public void backToLogin(View view) {
+        getFragmentManager().beginTransaction().
+                replace(R.id.main, new LoginScreen(), "login").commit();
+    }
 
-        @Override
-        protected JSONObject doInBackground(HashMap<String, JSONObject>... params) {
-            HashMap<String, JSONObject> map = params[0];
-            Set keySet = map.keySet();
-            String urlEnd = null;
-            for (Object s : keySet) {
-                urlEnd = (String) s;
-            }
-            JSONObject jO = map.get(urlEnd);
-            String responsData = null;
-            try {
-                responsData = HttpClient.sendAPost(jO, urlEnd);
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                return new JSONObject(responsData);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-            return new JSONObject();
-        }
 
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-        }
+    @Override
+    public void onLoginInteraction(String username, String password) {
+            //Switch to Fragment profile
+            Toast.makeText(this, "Login Succesful with "+username+" "+password, Toast.LENGTH_SHORT);
 
-        @Override
-        protected void onPostExecute(JSONObject s) {
-            System.out.println(s.toString());
-            super.onPostExecute(s);
-        }
+    }
+
+    @Override
+    public void onFragmentInteraction(Uri uri) {
+
     }
 }
