@@ -23,6 +23,7 @@ public class JSonParse {
 
     public static Bundle profileResult(JSONObject jsonObject) {
         Bundle arg = new Bundle();
-        jsonObject
+        //jsonObject
+        return arg;
     }
 }
