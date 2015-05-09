@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -70,6 +71,17 @@ public class SignUp extends Fragment {
         this.httpPostExecute = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
+                String result = JsonParse.addUserParse(jsonObject);
+                switch (result) {
+                    case "emailError":
+                        Toast.makeText(getActivity(), "Email is occupied", Toast.LENGTH_LONG).show();
+                        break;
+                    case "usernameExistsError":
+                        Toast.makeText(getActivity(), "Username is occupied", Toast.LENGTH_LONG).show();
+                        break;
+                    case "user added":
+                        onButtonPressed();
+                }
 
             }
         };
@@ -107,12 +119,13 @@ public class SignUp extends Fragment {
                 }
             }
         });
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onButtonPressed() {
         if (mListener != null) {
-            mListener.onFragmentInteraction(uri);
+            mListener.onSigUpInteraction();
         }
     }
 
@@ -145,7 +158,7 @@ public class SignUp extends Fragment {
      */
     public interface OnSignUpInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(Uri uri);
+        public void onSigUpInteraction();
     }
 
 }

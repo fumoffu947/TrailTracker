@@ -66,6 +66,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:inputType="textEmailAddress"
             android:id="@+id/signUpEmailEdit" />
     </LinearLayout>
 
@@ -102,7 +103,7 @@
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/signUpPaswordEdit" />
+            android:id="@+id/signUpPasswordEdit" />
     </LinearLayout>
 
     <Button

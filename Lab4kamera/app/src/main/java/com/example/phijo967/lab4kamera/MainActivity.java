@@ -1,5 +1,6 @@
 package com.example.phijo967.lab4kamera;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -34,7 +35,10 @@ import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener,LoginScreen.OnLoginInteractionListener,SignUp.OnSignUpInteractionListener {
+public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,LoginScreen.OnLoginInteractionListener,
+        SignUp.OnSignUpInteractionListener {
+
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView mImageView;
     private GoogleApiClient mGoogleApiClient;
@@ -231,12 +235,11 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     public void signUpFragment(View view) {
-        getFragmentManager().beginTransaction().replace(R.id.main, new SignUp()).commit();
+        switchFragment(new SignUp());
     }
 
     public void backToLogin(View view) {
-        getFragmentManager().beginTransaction().
-                replace(R.id.main, new LoginScreen(), "login").commit();
+        switchFragment(new LoginScreen());
     }
 
 
@@ -248,7 +251,11 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void onFragmentInteraction(Uri uri) {
+    public void onSigUpInteraction() {
+        switchFragment(new LoginScreen());
+    }
 
+    public void switchFragment(Fragment fragment) {
+        getFragmentManager().beginTransaction().replace(R.id.main, fragment).commit();
     }
 }
