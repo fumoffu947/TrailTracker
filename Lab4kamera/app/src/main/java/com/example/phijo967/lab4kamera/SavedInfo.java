@@ -5,6 +5,9 @@ package com.example.phijo967.lab4kamera;
  */
 public class SavedInfo {
 
+    public static String username;
+    public static String password;
+
     public static ProfileInfo profileInfo;
 
 

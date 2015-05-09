@@ -80,6 +80,7 @@ public class SignUp extends Fragment {
                         Toast.makeText(getActivity(), "Username is occupied", Toast.LENGTH_LONG).show();
                         break;
                     case "user added":
+                        Toast.makeText(getActivity(), "Sign up successful", Toast.LENGTH_LONG).show();
                         onButtonPressed();
                 }
 

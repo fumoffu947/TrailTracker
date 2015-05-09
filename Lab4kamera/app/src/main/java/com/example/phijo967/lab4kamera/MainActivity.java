@@ -246,7 +246,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     public void onLoginInteraction(String username, String password) {
             //Switch to Fragment profile
-            Toast.makeText(this, "Login Succesful with "+username+" "+password, Toast.LENGTH_SHORT);
+            Toast.makeText(this, "Login Succesful with "+username+" "+password, Toast.LENGTH_SHORT).show();
 
     }
 

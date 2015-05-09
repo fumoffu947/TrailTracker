@@ -80,12 +80,13 @@ public class LoginScreen extends Fragment {
                         Toast.makeText(getActivity(), "Internal Error parse", Toast.LENGTH_SHORT).show();
                         Toast.makeText(getActivity(), "Pleas try again later", Toast.LENGTH_LONG).show();
                     default:
-                        int id_u = Integer.getInteger(result,-2);
-                        if (id_u == -2) {
+                        try {
+                            int test = Integer.parseInt(result);
+                            onInteraction(username, password);
+                        }catch (NumberFormatException e) {
+                            e.printStackTrace();
                             Toast.makeText(getActivity(),"Couldn't get the User", Toast.LENGTH_SHORT).show();
                             Toast.makeText(getActivity(),"Please try again later", Toast.LENGTH_LONG).show();
-                        } else {
-                            onInteraction(username,password);
                         }
                 }
             }
@@ -102,9 +103,6 @@ public class LoginScreen extends Fragment {
         // Inflate the layout for this fragmentu
         final View rootView = inflater.inflate(R.layout.fragment_login_screen, container, false);
 
-        final String[] username = new String[1];
-        final String[] password = new String[1];
-
         Button button = (Button) rootView.findViewById(R.id.loginbutton);
         button.setOnClickListener(new View.OnClickListener() {
 
@@ -113,12 +111,12 @@ public class LoginScreen extends Fragment {
                 System.out.println("onClick");
                 EditText usernameE = (EditText) rootView.findViewById(R.id.signUpUsernameEdit);
                 EditText passwordE = (EditText) rootView.findViewById(R.id.signUpPasswordEdit);
-                username[0] = usernameE.getText().toString();
-                password[0] = passwordE.getText().toString();
+                username = usernameE.getText().toString();
+                password = passwordE.getText().toString();
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("username", username[0]);
-                    jsonObject.put("password", password[0]);
+                    jsonObject.put("username", username);
+                    jsonObject.put("password", password);
                     HashMap<String,JSONObject> map = new HashMap();
                     map.put("login",jsonObject);
                     SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
@@ -128,9 +126,6 @@ public class LoginScreen extends Fragment {
                 }
             }
         });
-        this.username = username[0];
-        this.password = password[0];
-
         return rootView;
     }
 
