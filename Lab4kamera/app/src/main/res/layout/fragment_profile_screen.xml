@@ -1,0 +1,80 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context="com.example.phijo967.lab4kamera.fragments.ProfileScreen"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profileTop">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="150dp"
+            android:minWidth="150dp"
+            android:maxHeight="150dp"
+            android:maxWidth="150dp"
+            android:id="@+id/profileScreenProfileImg"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:id="@+id/profileScreenNameText"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/profileScreenProfileImg"
+            android:layout_marginTop="23dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number Of Paths: 40"
+            android:id="@+id/profileScreenNumberOfPathsText"
+            android:layout_below="@+id/profileScreenLastnameText"
+            android:layout_toEndOf="@+id/profileScreenProfileImg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lastname"
+            android:id="@+id/profileScreenLastnameText"
+            android:layout_below="@+id/profileScreenNameText"
+            android:layout_toEndOf="@+id/profileScreenProfileImg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Number Of Steps: 400"
+            android:id="@+id/profileScreenNumberOfStepsText"
+            android:layout_below="@+id/profileScreenNumberOfPathsText"
+            android:layout_toEndOf="@+id/profileScreenProfileImg" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Length Went: 200m"
+            android:id="@+id/profileScreenLengthWentText"
+            android:layout_gravity="left|top"
+            android:layout_below="@+id/profileScreenNumberOfStepsText"
+            android:layout_toEndOf="@+id/profileScreenProfileImg" />
+
+    </RelativeLayout>
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileTop"
+        android:layout_alignParentStart="true"
+        android:id="@+id/scrollView">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/profileTop"
+            android:layout_alignParentStart="true">
+
+        </FrameLayout>
+    </ScrollView>
+
+</RelativeLayout>

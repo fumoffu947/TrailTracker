@@ -1,6 +1,9 @@
-package com.example.phijo967.lab4kamera;
+package com.example.phijo967.lab4kamera.http;
 
 import android.os.AsyncTask;
+
+import com.example.phijo967.lab4kamera.http.HttpClient;
+import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 
 import org.json.JSONException;
 import org.json.JSONObject;
