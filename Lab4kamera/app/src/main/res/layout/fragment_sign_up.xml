@@ -29,12 +29,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signUpNameEdit"
+            android:inputType="textPersonName"
             android:hint="Name"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signUpLastNameEdit"
+            android:inputType="textPersonName"
             android:hint="Lastname"/>
 
         <EditText
@@ -48,18 +50,21 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signUpUsernameEdit"
+            android:inputType="text"
             android:hint="Username"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signUpPasswordEdit"
+            android:inputType="textPassword"
             android:hint="Password"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signUpPasswordCheckEdit"
+            android:inputType="textPassword"
             android:hint="Password verification"/>
 
         <Button

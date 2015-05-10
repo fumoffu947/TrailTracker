@@ -9,8 +9,8 @@ import java.util.List;
  */
 public class PostItem {
 
-    public String postName;
-    public String postLastname;
+    public String userName;
+    public String userLastname;
     public String name;
     public String description;
     public Integer id_p;
@@ -19,11 +19,11 @@ public class PostItem {
     public List<List<Float>> positionList;
     public List<Bitmap> photoList;
 
-    public PostItem(String postName, String postLastname, String name, String description,
+    public PostItem(String userName, String userLastname, String name, String description,
                     Integer id_p, Integer likes, List<Comment> comments,
                     List<List<Float>> positionList, List<Bitmap> photoList) {
-        this.postName = postName;
-        this.postLastname = postLastname;
+        this.userName = userName;
+        this.userLastname = userLastname;
         this.name = name;
         this.description = description;
         this.id_p = id_p;

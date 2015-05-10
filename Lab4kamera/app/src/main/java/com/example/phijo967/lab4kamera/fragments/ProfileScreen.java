@@ -1,14 +1,15 @@
 package com.example.phijo967.lab4kamera.fragments;
 
 import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
 import com.example.phijo967.lab4kamera.R;
+import com.example.phijo967.lab4kamera.SavedInfo;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 
 import org.json.JSONObject;
@@ -74,14 +75,26 @@ public class ProfileScreen extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        onInteraction("addPost");
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_profile_screen, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_profile_screen, container, false);
+        TextView name = (TextView) rootView.findViewById(R.id.profileScreenNameText);
+        TextView lastname = (TextView) rootView.findViewById(R.id.profileScreenLastnameText);
+        TextView numberOfPaths = (TextView) rootView.findViewById(R.id.profileScreenNumberOfPathsText);
+        TextView numberOfSteps = (TextView) rootView.findViewById(R.id.profileScreenNumberOfStepsText);
+        TextView lengthWent = (TextView) rootView.findViewById(R.id.profileScreenLengthWentText);
+        name.setText(SavedInfo.profileInfo.name);
+        lastname.setText(SavedInfo.profileInfo.lastname);
+        numberOfPaths.setText("Number of paths: "+SavedInfo.profileInfo.numberOfPaths);
+        numberOfSteps.setText("Number of steps: "+SavedInfo.profileInfo.numberOfSteps);
+        lengthWent.setText("Length went"+SavedInfo.profileInfo.lengthWent);
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
+    public void onInteraction(String s) {
         if (mListener != null) {
-            mListener.onProfileScreenInteraction(uri);
+            mListener.onProfileScreenInteraction(s);
         }
     }
 
@@ -114,7 +127,7 @@ public class ProfileScreen extends Fragment {
      */
     public interface OnProfileScreenInteractionListener {
         // TODO: Update argument type and name
-        public void onProfileScreenInteraction(Uri uri);
+        public void onProfileScreenInteraction(String s);
     }
 
 }

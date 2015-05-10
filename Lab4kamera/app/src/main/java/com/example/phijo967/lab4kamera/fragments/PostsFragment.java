@@ -1,6 +1,7 @@
 package com.example.phijo967.lab4kamera.fragments;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,13 +9,19 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.example.phijo967.lab4kamera.MyListAdapter;
 import com.example.phijo967.lab4kamera.R;
 
+import com.example.phijo967.lab4kamera.SavedInfo;
+import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.Comment;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostContentHolder;
+import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -22,7 +29,7 @@ import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostContent
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p/>
- * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
+ * Activities containing this fragment MUST implement the {@link com.example.phijo967.lab4kamera.fragments.PostsFragment.OnPostFragmentInteractionListener}
  * interface.
  */
 public class PostsFragment extends Fragment implements AbsListView.OnItemClickListener {
@@ -36,7 +43,7 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
     private String mParam1;
     private String mParam2;
 
-    private OnFragmentInteractionListener mListener;
+    private OnPostFragmentInteractionListener mListener;
 
     /**
      * The fragment's ListView/GridView.
@@ -74,10 +81,18 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        ArrayList<Comment> comments = new ArrayList<>();
+        comments.add(new Comment("test2", "test2son", "a comment"));
+        List<List<Float>> posL = new ArrayList<>();
+        posL.add(new ArrayList<Float>());
+        PostItem object = new PostItem("test", "testSon", "a post", "this is a test post", 1, 4, comments, posL, new ArrayList<Bitmap>());
+        SavedInfo.testContentPost.add(object);
+        SavedInfo.testContentPost.add(object);
+        SavedInfo.testContentPost.add(object);
 
-        // TODO: Change Adapter to display your content
-        mAdapter = new ArrayAdapter<PostContentHolder.PostItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, PostContentHolder.ITEMS);
+        mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.testContentPost);
+        /*mAdapter = new ArrayAdapter<PostContentHolder.PostItem>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, PostContentHolder.ITEMS);*/
     }
 
     @Override
@@ -99,10 +114,10 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
-            mListener = (OnFragmentInteractionListener) activity;
+            mListener = (OnPostFragmentInteractionListener) activity;
         } catch (ClassCastException e) {
             throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
+                    + " must implement OnPostFragmentInteractionListener");
         }
     }
 
@@ -118,7 +133,7 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(PostContentHolder.ITEMS.get(position).id);
+            //mListener.onPostFragmentInteraction(PostContentHolder.ITEMS.get(position).id);
         }
     }
 
@@ -145,9 +160,9 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFragmentInteractionListener {
+    public interface OnPostFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        public void onPostFragmentInteraction(String id);
     }
 
 }

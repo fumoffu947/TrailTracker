@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.phijo967.lab4kamera.SavedInfo;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.example.phijo967.lab4kamera.JsonParse;
 import com.example.phijo967.lab4kamera.R;
@@ -105,7 +106,7 @@ public class LoginScreen extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragmentu
+        // Inflate the layout for this fragment
         final View rootView = inflater.inflate(R.layout.fragment_login_screen, container, false);
 
         Button button = (Button) rootView.findViewById(R.id.loginbutton);
@@ -119,6 +120,8 @@ public class LoginScreen extends Fragment {
                 username = usernameE.getText().toString();
                 password = passwordE.getText().toString();
                 JSONObject jsonObject = new JSONObject();
+                SavedInfo.username = username;
+                SavedInfo.password = password;
                 try {
                     jsonObject.put("username", username);
                     jsonObject.put("password", password);
@@ -135,7 +138,7 @@ public class LoginScreen extends Fragment {
     }
 
     // TODO: Rename method, update argument and hook method into UI event
-    public void onInteraction(String username, String password) {// False is go to Profile
+    public void onInteraction(String username, String password) {
         if (mListener != null) {
             mListener.onLoginInteraction(username, password);
         }

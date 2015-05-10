@@ -19,14 +19,14 @@ public class PostContentHolder {
 
     static {
         // Add 3 sample items.
-        addItem(new PostItem("1", "Item 1"));
-        addItem(new PostItem("2", "Item 2"));
-        addItem(new PostItem("3", "Item 3"));
+        //addItem(new PostItem("1", "Item 1"));
+        //addItem(new PostItem("2", "Item 2"));
+        //addItem(new PostItem("3", "Item 3"));
     }
 
     private static void addItem(PostItem item) {
-        ITEMS.add(item);
-        ITEM_MAP.put(item.id, item);
+        //ITEMS.add(item);
+        //ITEM_MAP.put(item.id, item);
     }
 
 }

@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Name of Post"
+        android:id="@+id/postName"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentStart="true" />
+
+    <ScrollView
+        android:id="@+id/postScrollViewPic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postName"
+        android:layout_alignParentStart="true">
+
+        <LinearLayout
+            android:id="@+id/postLinearLayoutPic"
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:minHeight="100dp">
+
+        </LinearLayout>
+    </ScrollView>
+
+    <TextView
+        android:id="@+id/postDescription"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description of the Path"
+        android:minHeight="40dp"
+        android:layout_below="@id/postScrollViewPic"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/postUserName"
+        android:text="user nmae"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/postDescription"
+        android:layout_alignParentStart="true"/>
+
+    <TextView
+        android:id="@+id/postUserLastname"
+        android:text="User Lastname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postDescription"
+        android:layout_toEndOf="@+id/postUserName"
+        android:paddingLeft="10dp"/>
+
+    <TextView
+        android:id="@+id/postLikes"
+        android:minWidth="20dp"
+        android:paddingLeft="10dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/postDescription"
+        android:layout_toEndOf="@id/postUserLastname"/>
+
+
+
+    <ScrollView
+        android:id="@+id/postScrollViewComment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postUserName"
+        android:layout_alignParentStart="true">
+        <LinearLayout
+            android:id="@+id/postLinearLayoutComment"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Comments"/>
+
+
+        </LinearLayout>
+    </ScrollView>
+
+    <EditText
+        android:id="@+id/postAddCommentEdit"
+        android:hint="Comment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/postScrollViewComment"
+        android:layout_alignParentStart="true"/>
+
+    <Button
+        android:id="@+id/postPostComment"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Add comment"
+        android:layout_below="@+id/postAddCommentEdit"
+        android:layout_alignParentStart="true"/>
+</RelativeLayout>

@@ -20,6 +20,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phijo967.lab4kamera.fragments.LoginScreen;
+import com.example.phijo967.lab4kamera.fragments.PostsFragment;
+import com.example.phijo967.lab4kamera.fragments.ProfileScreen;
 import com.example.phijo967.lab4kamera.fragments.SignUp;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
@@ -41,7 +43,7 @@ import java.util.Locale;
 
 public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LoginScreen.OnLoginInteractionListener,
-        SignUp.OnSignUpInteractionListener {
+        SignUp.OnSignUpInteractionListener, PostsFragment.OnPostFragmentInteractionListener, ProfileScreen.OnProfileScreenInteractionListener{
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView mImageView;
@@ -71,6 +73,8 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
                 takePic();
             }
         });*/
+
+        SavedInfo.profileInfo = new ProfileInfo("philip", "Johansson", 0, 0, 0);
 
         this.httpPostExecute = new HttpPostExecute() {
             @Override
@@ -249,8 +253,9 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     @Override
     public void onLoginInteraction(String username, String password) {
-            //Switch to Fragment profile
-            Toast.makeText(this, "Login Succesful with "+username+" "+password, Toast.LENGTH_SHORT).show();
+        //Switch to Fragment profile
+        Toast.makeText(this, "Login Succesful with "+username+" "+password, Toast.LENGTH_SHORT).show();
+        switchFragment(new ProfileScreen());
 
     }
 
@@ -261,5 +266,18 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     public void switchFragment(Fragment fragment) {
         getFragmentManager().beginTransaction().replace(R.id.main, fragment).commit();
+    }
+
+    @Override
+    public void onPostFragmentInteraction(String id) {
+
+    }
+
+    @Override
+    public void onProfileScreenInteraction(String s) {
+        if (s.equals("addPost")) {
+            getFragmentManager().beginTransaction().add(R.id.profileScreenFragmentContainer,
+                    new PostsFragment()).commit();
+        }
     }
 }
