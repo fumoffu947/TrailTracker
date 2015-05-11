@@ -72,6 +72,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@+id/postUserName"
         android:layout_alignParentStart="true">
+
         <LinearLayout
             android:id="@+id/postLinearLayoutComment"
             android:orientation="vertical"

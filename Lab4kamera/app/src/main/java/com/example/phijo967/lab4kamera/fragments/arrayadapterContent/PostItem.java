@@ -16,12 +16,12 @@ public class PostItem {
     public Integer id_p;
     public Integer likes;
     public List<Comment> comments;
-    public List<List<Float>> positionList;
+    public List<List<Double>> positionList;
     public List<Bitmap> photoList;
 
     public PostItem(String userName, String userLastname, String name, String description,
                     Integer id_p, Integer likes, List<Comment> comments,
-                    List<List<Float>> positionList, List<Bitmap> photoList) {
+                    List<List<Double>> positionList, List<Bitmap> photoList) {
         this.userName = userName;
         this.userLastname = userLastname;
         this.name = name;

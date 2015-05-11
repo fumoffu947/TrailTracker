@@ -13,13 +13,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.Comment;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostItem;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
+import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -28,8 +33,9 @@ import java.util.List;
 public class MyListAdapter extends ArrayAdapter<PostItem> {
 
     private final Context context;
-    private final List<PostItem> postItems;
+    private List<PostItem> postItems;
     private final HttpPostExecute httpPostExecute;
+    private int currentPostItem;
 
     public MyListAdapter(Context context, int resource, List<PostItem> objects) {
         super(context, resource, objects);
@@ -38,6 +44,17 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
         this.httpPostExecute = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
+                String res = JsonParse.resultParse(jsonObject);
+                if (res.equals("comment was added to post")) {
+                    Toast.makeText(getContext(),"Comment was added", Toast.LENGTH_SHORT).show();
+                }
+                else {
+                    Toast.makeText(getContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Pleas try again later", Toast.LENGTH_SHORT).show();
+                    postItems.get(currentPostItem).comments.remove(postItems.get(currentPostItem).comments.size()-1);
+                    notifyDataSetChanged();
+                }
+
 
             }
         };
@@ -56,7 +73,7 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
+    public View getView(final int position, View convertView, ViewGroup parent) {
         View rootView = convertView;
 
         if (convertView == null) {
@@ -89,8 +106,10 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
         holder.likes.setText(String.valueOf(postItem.likes));
 
         List<Comment> comments = postItem.comments;
-        List<List<Float>> postitionList = postItem.positionList;
+        List<List<Double>> postitionList = postItem.positionList;
         List<Bitmap> photoList = postItem.photoList;
+
+        holder.linearLayoutComment.removeAllViews();
 
         for (int index = 0; index < comments.size(); index++) { // dynamically add comments
             String lineSep = System.getProperty("line.separator");
@@ -108,10 +127,43 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
                         SavedInfo.profileInfo.lastname, commentEdit);
                 postItem.comments.add(comment);
                 notifyDataSetChanged();
+
+                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
+                HashMap<String, JSONObject> map = new HashMap<>();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("username", SavedInfo.username);
+                    jsonObject.put("password",SavedInfo.password);
+                    jsonObject.put("id_p", postItem.id_p);
+                    jsonObject.put("comment", commentEdit);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                map.put("getuserpost",jsonObject);
+                task.execute(map);
+
+                currentPostItem = position;
+
                 holder.commentEdit.setText("");
-                //do network call
+
             }
         });
         return rootView;
+    }
+
+    public void addPostItem(PostItem postItem) {
+        postItems.add(postItem);
+        notifyDataSetChanged();
+    }
+
+    public void setPostItems(List<PostItem> postItems) {
+        //this.postItems = postItems;
+        this.postItems.clear();
+        for (PostItem postItem : postItems) {
+            this.postItems.add(postItem);
+        }
+        notifyDataSetChanged();
+
     }
 }

@@ -10,6 +10,7 @@ import java.util.List;
  */
 public class SavedInfo {
 
+    public static Integer id_u;
     public static String username;
     public static String password;
 

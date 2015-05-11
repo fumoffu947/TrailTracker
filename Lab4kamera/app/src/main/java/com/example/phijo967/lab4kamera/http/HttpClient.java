@@ -59,7 +59,6 @@ public class HttpClient {
             if (urlConnection != null) urlConnection.disconnect();
         }
 
-        System.out.println(br.toString());
         return br.toString();
     }
 }

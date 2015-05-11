@@ -12,6 +12,7 @@ import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.example.phijo967.lab4kamera.JsonParse;
 import com.example.phijo967.lab4kamera.MyListAdapter;
 import com.example.phijo967.lab4kamera.R;
 
@@ -19,8 +20,15 @@ import com.example.phijo967.lab4kamera.SavedInfo;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.Comment;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostContentHolder;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostItem;
+import com.example.phijo967.lab4kamera.http.HttpPostExecute;
+import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 /**
@@ -54,7 +62,9 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
      * The Adapter which will be used to populate the ListView/GridView with
      * Views.
      */
-    private ListAdapter mAdapter;
+    private MyListAdapter mAdapter;
+    private HttpPostExecute httpPostExecute;
+    private String dataType;
 
     // TODO: Rename and change types of parameters
     public static PostsFragment newInstance(String param1, String param2) {
@@ -76,21 +86,69 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+         Bundle arg =this.getArguments();
+        this.dataType = arg.getString("datatype");
+        mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.userpost);
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        this.httpPostExecute = new HttpPostExecute() {
+            @Override
+            public void httpOnPostExecute(JSONObject jsonObject) {
+                List<PostItem> res = JsonParse.postParse(jsonObject);
+                mAdapter.setPostItems(res);
+                if (dataType.equals("userdata")) {
+                    SavedInfo.userpost = res;
+                }
+                else {
+                    SavedInfo.userflow = res;
+                }
+            }
+        };
+        if (dataType.equals("userpost")) {
+
+            if(SavedInfo.userpost.isEmpty()) {
+                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
+                HashMap<String, JSONObject> map = new HashMap<>();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("username", SavedInfo.username);
+                    jsonObject.put("password",SavedInfo.password);
+                    jsonObject.put("id_u",SavedInfo.id_u);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                map.put("getuserpost",jsonObject);
+                task.execute(map);
+            }
+        }else {
+            mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.userflow);
+            if (SavedInfo.userflow.isEmpty()) {
+                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
+                HashMap<String, JSONObject> map = new HashMap<>();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("username", "test1");
+                    jsonObject.put("password", "test1");
+                    jsonObject.put("id_u", SavedInfo.id_u);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                map.put("getuserflowpost", jsonObject);
+                task.execute(map);
+            }
+
+        }
         ArrayList<Comment> comments = new ArrayList<>();
         comments.add(new Comment("test2", "test2son", "a comment"));
-        List<List<Float>> posL = new ArrayList<>();
-        posL.add(new ArrayList<Float>());
+        List<List<Double>> posL = new ArrayList<>();
+        posL.add(new ArrayList<Double>());
         PostItem object = new PostItem("test", "testSon", "a post", "this is a test post", 1, 4, comments, posL, new ArrayList<Bitmap>());
         SavedInfo.testContentPost.add(object);
-
-        mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.testContentPost);
-        /*mAdapter = new ArrayAdapter<PostContentHolder.PostItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, PostContentHolder.ITEMS);*/
     }
 
     @Override

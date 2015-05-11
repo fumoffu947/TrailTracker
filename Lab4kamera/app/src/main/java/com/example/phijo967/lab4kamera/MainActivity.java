@@ -276,8 +276,12 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     public void onProfileScreenInteraction(String s) {
         if (s.equals("addPost")) {
+            PostsFragment fragment = new PostsFragment();
+            Bundle arg = new Bundle();
+            arg.putString("datatype","userpost");
+            fragment.setArguments(arg);
             getFragmentManager().beginTransaction().add(R.id.profileScreenFragmentContainer,
-                    new PostsFragment()).commit();
+                    fragment).commit();
         }
     }
 }

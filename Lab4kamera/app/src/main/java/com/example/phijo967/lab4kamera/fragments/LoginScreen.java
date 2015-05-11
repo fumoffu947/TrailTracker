@@ -74,7 +74,7 @@ public class LoginScreen extends Fragment {
         this.httpPostExecute = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
-                String result = JsonParse.loginParse(jsonObject);
+                String result = JsonParse.resultParse(jsonObject);
                 switch (result) {
                     case "usernameError":
                         Toast.makeText(getActivity(),"Wrong Username",Toast.LENGTH_SHORT).show();
@@ -87,7 +87,8 @@ public class LoginScreen extends Fragment {
                         Toast.makeText(getActivity(), "Pleas try again later", Toast.LENGTH_LONG).show();
                     default:
                         try {
-                            int test = Integer.parseInt(result);
+                            int id_u = Integer.parseInt(result);
+                            SavedInfo.id_u = id_u;
                             onInteraction(username, password);
                         }catch (NumberFormatException e) {
                             e.printStackTrace();

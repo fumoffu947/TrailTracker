@@ -7,12 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.example.phijo967.lab4kamera.JsonParse;
+import com.example.phijo967.lab4kamera.ProfileInfo;
 import com.example.phijo967.lab4kamera.R;
 import com.example.phijo967.lab4kamera.SavedInfo;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
+import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
 
+import org.json.JSONException;
 import org.json.JSONObject;
+
+import java.util.HashMap;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -34,6 +41,11 @@ public class ProfileScreen extends Fragment {
 
     private OnProfileScreenInteractionListener mListener;
     private HttpPostExecute httpPostExecute;
+    private TextView name;
+    private TextView lastname;
+    private TextView numberOfPaths;
+    private TextView numberOfSteps;
+    private TextView lengthWent;
 
     /**
      * Use this factory method to create a new instance of
@@ -63,13 +75,41 @@ public class ProfileScreen extends Fragment {
         this.httpPostExecute = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
-
+                Bundle args = JsonParse.profileParse(jsonObject);
+                if (args.getString("result").equals("ok")) {
+                    SavedInfo.profileInfo = new ProfileInfo(args.getString("name"),
+                            args.getString("lastname"), args.getInt("numOfPath"),
+                            args.getInt("numberOfSteps"), args.getInt("lenghtWent"));
+                }
+                else {
+                    SavedInfo.profileInfo = new ProfileInfo("Failed to load","",0,0,0);
+                    Toast.makeText(getActivity(),"Failed to load user", Toast.LENGTH_SHORT).show();
+                }
+                name.setText(SavedInfo.profileInfo.name);
+                lastname.setText(SavedInfo.profileInfo.lastname);
+                numberOfPaths.setText("Number of paths: "+SavedInfo.profileInfo.numberOfPaths);
+                numberOfSteps.setText("Number of steps: "+SavedInfo.profileInfo.numberOfSteps);
+                lengthWent.setText("Length went: "+SavedInfo.profileInfo.lengthWent);
             }
         };
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+
+        SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
+        HashMap<String, JSONObject> map = new HashMap<>();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", "test1");
+            jsonObject.put("password","test1");
+            jsonObject.put("id_u",SavedInfo.id_u);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        map.put("getuser",jsonObject);
+        task.execute(map);
     }
 
     @Override
@@ -78,16 +118,11 @@ public class ProfileScreen extends Fragment {
         onInteraction("addPost");
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile_screen, container, false);
-        TextView name = (TextView) rootView.findViewById(R.id.profileScreenNameText);
-        TextView lastname = (TextView) rootView.findViewById(R.id.profileScreenLastnameText);
-        TextView numberOfPaths = (TextView) rootView.findViewById(R.id.profileScreenNumberOfPathsText);
-        TextView numberOfSteps = (TextView) rootView.findViewById(R.id.profileScreenNumberOfStepsText);
-        TextView lengthWent = (TextView) rootView.findViewById(R.id.profileScreenLengthWentText);
-        name.setText(SavedInfo.profileInfo.name);
-        lastname.setText(SavedInfo.profileInfo.lastname);
-        numberOfPaths.setText("Number of paths: "+SavedInfo.profileInfo.numberOfPaths);
-        numberOfSteps.setText("Number of steps: "+SavedInfo.profileInfo.numberOfSteps);
-        lengthWent.setText("Length went"+SavedInfo.profileInfo.lengthWent);
+        this.name = (TextView) rootView.findViewById(R.id.profileScreenNameText);
+        this.lastname = (TextView) rootView.findViewById(R.id.profileScreenLastnameText);
+        this.numberOfPaths = (TextView) rootView.findViewById(R.id.profileScreenNumberOfPathsText);
+        this.numberOfSteps = (TextView) rootView.findViewById(R.id.profileScreenNumberOfStepsText);
+        this.lengthWent = (TextView) rootView.findViewById(R.id.profileScreenLengthWentText);
         return rootView;
     }
 
