@@ -1,44 +1,50 @@
 package com.example.phijo967.lab4kamera;
 
+import android.app.Fragment;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.location.Location;
-import android.location.LocationManager;
 import android.net.Uri;
-import android.os.Environment;
-import android.os.Handler;
-import android.os.ResultReceiver;
-import android.provider.MediaStore;
-import android.provider.Settings;
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
+import android.support.v7.app.ActionBarActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.SimpleExpandableListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.phijo967.lab4kamera.fragments.LoginScreen;
+import com.example.phijo967.lab4kamera.fragments.PostsFragment;
+import com.example.phijo967.lab4kamera.fragments.ProfileScreen;
+import com.example.phijo967.lab4kamera.fragments.SignUp;
+import com.example.phijo967.lab4kamera.http.HttpPostExecute;
+import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.internal.bm;
 import com.google.android.gms.location.LocationServices;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
 
-public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
+public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,LoginScreen.OnLoginInteractionListener,
+        SignUp.OnSignUpInteractionListener, PostsFragment.OnPostFragmentInteractionListener, ProfileScreen.OnProfileScreenInteractionListener{
+
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView mImageView;
     private GoogleApiClient mGoogleApiClient;
@@ -47,6 +53,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     private String mCurrentPhotoPath;
     private String troll;
     private ImageView mImageView2;
+    private HttpPostExecute httpPostExecute;
 
 
     @Override
@@ -55,20 +62,43 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
         buildGoogleApiClient();
         mGoogleApiClient.connect();
-        locationText = (TextView) findViewById(R.id.textView2);
-        mImageView = (ImageView) findViewById(R.id.imageView);
-        this.mImageView2 = (ImageView) findViewById(R.id.imageView2);
-        Button button = (Button) findViewById(R.id.button);
-        button.setOnClickListener(new View.OnClickListener() {
+        getFragmentManager().beginTransaction().add(R.id.main,new LoginScreen(), "login").commit();
+        //locationText = (TextView) findViewById(R.id.textView2);
+        //mImageView = (ImageView) findViewById(R.id.imageView);
+        //this.mImageView2 = (ImageView) findViewById(R.id.imageView2);
+        //Button button = (Button) findViewById(R.id.button);
+        /*button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 takePic();
             }
-        });
+        });*/
+
+        SavedInfo.profileInfo = new ProfileInfo("philip", "Johansson", 0, 0, 0);
+
+        this.httpPostExecute = new HttpPostExecute() {
+            @Override
+            public void httpOnPostExecute(JSONObject jsonObject) {
+                System.out.println(jsonObject.toString());
+            }
+        };
+
+        SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
+        HashMap<String, JSONObject> map = new HashMap<>();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", "test1");
+            jsonObject.put("password","test1");
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        map.put("login",jsonObject);
+        task.execute(map);
     }
 
 
-    protected synchronized void buildGoogleApiClient() {
+    protected synchronized void buildGoogleApiClient() { // starts the googleappClient so that i have access to it so i can look for an location
         System.out.println("googleBuilder");
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addConnectionCallbacks(this)
@@ -83,6 +113,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     public File createImageFile() {
+        //creates a file to store the picture in so i can access the image and send it att a later point
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_";
         File storageDir = Environment.getExternalStoragePublicDirectory(
@@ -95,11 +126,11 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             e.printStackTrace();
             System.out.println("could not make file");
         }
-        this.mCurrentPhotoPath = "file:" + image.getAbsolutePath();
+        this.mCurrentPhotoPath = image.getAbsolutePath();
         return image;
     }
 
-    private void dispatchTakePictureIntent() {
+    private void dispatchTakePictureIntent() {// starts an imagecapture intent so i can take an picture with the camera an use the pic
         Intent takePicture = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (takePicture.resolveActivity(getPackageManager()) != null) {
             File photoFile = null;
@@ -112,23 +143,29 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     private void setPic() {
-        int targetW = mImageView.getMaxWidth();
-        int targetH = mImageView.getMaxHeight();
+        int targetW = mImageView2.getMaxWidth();
+        int targetH = mImageView2.getMaxHeight();
 
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
         BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
+        int photoW = bmOptions.outWidth; // get the photo width and height
         int photoH = bmOptions.outHeight;
 
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
+        int scaleFactor = Math.max(photoW / targetW, photoH / targetH);
+        if (scaleFactor == 1) {
+            if (photoH > targetH || photoW > targetW) {
+                scaleFactor = 2; // sets the scaleFactor to 2 if the immage is wider or higer than
+                                //(my cellphones max bit image size to set in an imageview)
+            }
+        }
 
         bmOptions.inJustDecodeBounds = false;
         bmOptions.inSampleSize = scaleFactor;
         bmOptions.inPurgeable = true;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        mImageView2.setImageBitmap(bitmap);
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions); //returns a scaled copy of the image
+         mImageView2.setImageBitmap(bitmap);
     }
 
     @Override
@@ -203,5 +240,44 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
         System.out.println("connection faild");
+    }
+
+    public void signUpFragment(View view) {
+        switchFragment(new SignUp());
+    }
+
+    public void backToLogin(View view) {
+        switchFragment(new LoginScreen());
+    }
+
+
+    @Override
+    public void onLoginInteraction(String username, String password) {
+        //Switch to Fragment profile
+        Toast.makeText(this, "Login Succesful with "+username+" "+password, Toast.LENGTH_SHORT).show();
+        switchFragment(new ProfileScreen());
+
+    }
+
+    @Override
+    public void onSigUpInteraction() {
+        switchFragment(new LoginScreen());
+    }
+
+    public void switchFragment(Fragment fragment) {
+        getFragmentManager().beginTransaction().replace(R.id.main, fragment).commit();
+    }
+
+    @Override
+    public void onPostFragmentInteraction(String id) {
+
+    }
+
+    @Override
+    public void onProfileScreenInteraction(String s) {
+        if (s.equals("addPost")) {
+            getFragmentManager().beginTransaction().add(R.id.profileScreenFragmentContainer,
+                    new PostsFragment()).commit();
+        }
     }
 }
