@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.phijo967.lab4kamera.fragments.FriendsFragment;
 import com.example.phijo967.lab4kamera.fragments.LoginScreen;
 import com.example.phijo967.lab4kamera.fragments.PostsFragment;
 import com.example.phijo967.lab4kamera.fragments.ProfileScreen;
@@ -43,7 +44,8 @@ import java.util.Locale;
 
 public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LoginScreen.OnLoginInteractionListener,
-        SignUp.OnSignUpInteractionListener, PostsFragment.OnPostFragmentInteractionListener, ProfileScreen.OnProfileScreenInteractionListener{
+        SignUp.OnSignUpInteractionListener, PostsFragment.OnPostFragmentInteractionListener,
+        ProfileScreen.OnProfileScreenInteractionListener{
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView mImageView;
@@ -53,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     private String mCurrentPhotoPath;
     private String troll;
     private ImageView mImageView2;
-    private HttpPostExecute httpPostExecute;
+    private HttpPostExecute froendAdapterHttpPostExecute;
 
 
     @Override
@@ -62,39 +64,18 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         setContentView(R.layout.activity_main);
         buildGoogleApiClient();
         mGoogleApiClient.connect();
-        getFragmentManager().beginTransaction().add(R.id.main,new LoginScreen(), "login").commit();
-        //locationText = (TextView) findViewById(R.id.textView2);
-        //mImageView = (ImageView) findViewById(R.id.imageView);
-        //this.mImageView2 = (ImageView) findViewById(R.id.imageView2);
-        //Button button = (Button) findViewById(R.id.button);
-        /*button.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                takePic();
-            }
-        });*/
+        if (SavedInfo.username == null) {
+            getFragmentManager().beginTransaction().add(R.id.main, new LoginScreen(), "login").commit();
+        }
 
-        SavedInfo.profileInfo = new ProfileInfo("philip", "Johansson", 0, 0, 0);
 
-        this.httpPostExecute = new HttpPostExecute() {
+
+
+        this.froendAdapterHttpPostExecute = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
-                System.out.println(jsonObject.toString());
             }
         };
-
-        SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
-        HashMap<String, JSONObject> map = new HashMap<>();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("username", "test1");
-            jsonObject.put("password","test1");
-
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        map.put("login",jsonObject);
-        task.execute(map);
     }
 
 
@@ -283,5 +264,30 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
             getFragmentManager().beginTransaction().add(R.id.profileScreenFragmentContainer,
                     fragment).commit();
         }
+    }
+
+    public void toFriends(View view) {
+        FriendsFragment fragment = new FriendsFragment();
+        fragment.addAdapterHttpPostExecute(froendAdapterHttpPostExecute);
+        switchFragment(fragment);
+
+    }
+
+    public void toOptions(View view) {
+    }
+
+    public void toFlow(View view) {
+        Bundle arg = new Bundle();
+        arg.putString("datatype","flow");
+        Fragment fragment = new PostsFragment();
+        fragment.setArguments(arg);
+        switchFragment(fragment);
+    }
+
+    public void toNewPath(View view) {
+    }
+
+    public void toProfile(View view) {
+        switchFragment(new ProfileScreen());
     }
 }

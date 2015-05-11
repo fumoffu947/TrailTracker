@@ -13,12 +13,11 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 
 import com.example.phijo967.lab4kamera.JsonParse;
-import com.example.phijo967.lab4kamera.MyListAdapter;
+import com.example.phijo967.lab4kamera.adapter.MyListAdapter;
 import com.example.phijo967.lab4kamera.R;
 
 import com.example.phijo967.lab4kamera.SavedInfo;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.Comment;
-import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostContentHolder;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostItem;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
@@ -27,7 +26,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -88,7 +86,7 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
         super.onCreate(savedInstanceState);
          Bundle arg =this.getArguments();
         this.dataType = arg.getString("datatype");
-        mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.userpost);
+        mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.adapterList);
 
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
@@ -125,7 +123,7 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
                 task.execute(map);
             }
         }else {
-            mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.userflow);
+            //mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.userflow);
             if (SavedInfo.userflow.isEmpty()) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
                 HashMap<String, JSONObject> map = new HashMap<>();

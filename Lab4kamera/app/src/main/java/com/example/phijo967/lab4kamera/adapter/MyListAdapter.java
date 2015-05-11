@@ -1,4 +1,4 @@
-package com.example.phijo967.lab4kamera;
+package com.example.phijo967.lab4kamera.adapter;
 
 import android.app.Activity;
 import android.content.Context;
@@ -15,6 +15,9 @@ import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.phijo967.lab4kamera.JsonParse;
+import com.example.phijo967.lab4kamera.R;
+import com.example.phijo967.lab4kamera.SavedInfo;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.Comment;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostItem;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
@@ -41,14 +44,14 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
         super(context, resource, objects);
         this.context = context;
         this.postItems = objects;
-        this.httpPostExecute = new HttpPostExecute() {
+        this.httpPostExecute = new HttpPostExecute() { // the interface to get tha data back from the postExecute from ascyktask
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
                 String res = JsonParse.resultParse(jsonObject);
-                if (res.equals("comment was added to post")) {
+                if (res.equals("comment was added to post")) { // if it was a success
                     Toast.makeText(getContext(),"Comment was added", Toast.LENGTH_SHORT).show();
                 }
-                else {
+                else { // is it went wrong remove it and notify user
                     Toast.makeText(getContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "Pleas try again later", Toast.LENGTH_SHORT).show();
                     postItems.get(currentPostItem).comments.remove(postItems.get(currentPostItem).comments.size()-1);
@@ -74,9 +77,9 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        View rootView = convertView;
+        View rootView = convertView; // if an exixsting view is out of sight
 
-        if (convertView == null) {
+        if (convertView == null) { // if no existing view exists inflate a new
             LayoutInflater inflater = LayoutInflater.from(context);
             rootView = inflater.inflate(R.layout.post_layout, parent,false);
 
@@ -109,7 +112,7 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
         List<List<Double>> postitionList = postItem.positionList;
         List<Bitmap> photoList = postItem.photoList;
 
-        holder.linearLayoutComment.removeAllViews();
+        holder.linearLayoutComment.removeAllViews(); // remove the comments from befor
 
         for (int index = 0; index < comments.size(); index++) { // dynamically add comments
             String lineSep = System.getProperty("line.separator");
@@ -119,16 +122,16 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
             holder.linearLayoutComment.addView(comment);
         }
 
-        holder.addCommentButton.setOnClickListener(new View.OnClickListener() {
+        holder.addCommentButton.setOnClickListener(new View.OnClickListener() { // an click listener for add comment
             @Override
             public void onClick(View v) {
-                String commentEdit = holder.commentEdit.getText().toString();
+                String commentEdit = holder.commentEdit.getText().toString(); // get the info
                 Comment comment = new Comment(SavedInfo.profileInfo.name,
-                        SavedInfo.profileInfo.lastname, commentEdit);
-                postItem.comments.add(comment);
+                        SavedInfo.profileInfo.lastname, commentEdit); // create a new comment
+                postItem.comments.add(comment); // add it to show it until it failed
                 notifyDataSetChanged();
 
-                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
+                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute); // post the comment
                 HashMap<String, JSONObject> map = new HashMap<>();
                 JSONObject jsonObject = new JSONObject();
                 try {
@@ -140,10 +143,10 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
-                map.put("getuserpost",jsonObject);
+                map.put("postcomment",jsonObject);
                 task.execute(map);
 
-                currentPostItem = position;
+                currentPostItem = position; // save the postItems position in the list so that the comment can be removed if it fails
 
                 holder.commentEdit.setText("");
 

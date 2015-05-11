@@ -1,6 +1,93 @@
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
-    android:id="@+id/main"
-    />
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/linearLayout">
+
+        <TextView
+            android:background="@color/background_floating_material_dark"
+            android:textColor="@color/abc_primary_text_disable_only_material_dark"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:gravity="center"
+            android:id="@+id/profileTab"
+            android:text="Profile"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="toProfile"/>
+
+        <TextView
+            android:background="@color/background_floating_material_dark"
+            android:textColor="@color/abc_primary_text_disable_only_material_dark"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:gravity="center"
+            android:id="@+id/postPathTab"
+            android:text="New Path"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="toNewPath"/>
+
+        <TextView
+            android:background="@color/background_floating_material_dark"
+            android:textColor="@color/abc_primary_text_disable_only_material_dark"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:gravity="center"
+            android:id="@+id/flowTab"
+            android:text="Flow"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="toFlow"/>
+
+        <TextView
+            android:background="@color/background_floating_material_dark"
+            android:textColor="@color/abc_primary_text_disable_only_material_dark"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:gravity="center"
+            android:id="@+id/friendsTab"
+            android:text="Friends"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="toFriends"/>
+
+        <TextView
+            android:background="@color/background_floating_material_dark"
+            android:textColor="@color/abc_primary_text_disable_only_material_dark"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:gravity="center"
+            android:id="@+id/optionsTab"
+            android:text="Options"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="toOptions"/>
+
+    </LinearLayout>
+
+    <FrameLayout
+        android:layout_height="match_parent"
+        android:layout_width="match_parent"
+        android:id="@+id/main"
+        android:layout_below="@+id/linearLayout" />
+
+</RelativeLayout>
+
