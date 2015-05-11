@@ -85,4 +85,17 @@ public class MyFriendAdapter extends ArrayAdapter<Friend> {
         });
         return rootView;
     }
+
+    public void addFriend(Friend friend) {
+        this.friends.add(friend);
+        notifyDataSetChanged();
+    }
+
+    public void setFriends(List<Friend> friends) {
+        this.friends.clear();
+        for (Friend friend : friends) {
+            this.friends.add(friend);
+        }
+        notifyDataSetChanged();
+    }
 }

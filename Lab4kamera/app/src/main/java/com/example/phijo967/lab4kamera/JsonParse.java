@@ -3,6 +3,7 @@ package com.example.phijo967.lab4kamera;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 
+import com.example.phijo967.lab4kamera.fragments.Friend;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.Comment;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostItem;
 
@@ -10,6 +11,7 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -62,8 +64,6 @@ public class JsonParse {
         List<PostItem> res = new ArrayList<>();
 
         try {
-            System.out.println("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-            System.out.println(jsonObject.toString());
             JSONArray jsonArray = jsonObject.getJSONArray("result");
             for (int index = 0; index < jsonArray.length(); index++) {
                 Object jsonObj2 = jsonArray.get(index);
@@ -99,6 +99,23 @@ public class JsonParse {
                 res.add(new PostItem(jsonObj.getString("post_name"),jsonObj.getString("post_lastname"),
                         jsonObj.getString("name"),jsonObj.getString("description"),
                         jsonObj.getInt("id_p"),jsonObj.getInt("likes"),comments,postitonList,bitmaps));
+            }
+            return res;
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return res;
+    }
+
+    public static List<Friend> getFriendPars(JSONObject jsonObject) {
+        List<Friend> res = new ArrayList<>();
+
+        try {
+            JSONArray jsonArray = jsonObject.getJSONArray("result");
+            for (int index = 0; index < jsonArray.length(); index++) {
+                Object object = jsonArray.get(index);
+                JSONArray friendJsonArray = new JSONArray(object.toString());
+                res.add(new Friend(friendJsonArray.getString(1),friendJsonArray.getString(2),friendJsonArray.getInt(0)));
             }
             return res;
         } catch (JSONException e) {

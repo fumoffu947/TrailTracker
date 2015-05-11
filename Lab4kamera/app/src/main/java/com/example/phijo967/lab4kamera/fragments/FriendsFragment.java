@@ -12,12 +12,20 @@ import android.widget.ArrayAdapter;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
+import com.example.phijo967.lab4kamera.JsonParse;
 import com.example.phijo967.lab4kamera.R;
 
 import com.example.phijo967.lab4kamera.SavedInfo;
 import com.example.phijo967.lab4kamera.adapter.MyFriendAdapter;
 import com.example.phijo967.lab4kamera.fragments.dummy.DummyContent;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
+import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * A fragment representing a list of Items.
@@ -52,6 +60,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnItemClick
      */
     private MyFriendAdapter mAdapter;
     private HttpPostExecute adapterHttpPostExecute;
+    private HttpPostExecute httpPostExecute;
 
     // TODO: Rename and change types of parameters
     public static FriendsFragment newInstance(String param1, String param2) {
@@ -82,13 +91,32 @@ public class FriendsFragment extends Fragment implements AbsListView.OnItemClick
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        mAdapter = new MyFriendAdapter(getActivity(), android.R.layout.simple_list_item_1, SavedInfo.userFriends);
+
+        this.httpPostExecute = new HttpPostExecute() {
+            @Override
+            public void httpOnPostExecute(JSONObject jsonObject) {
+                List<Friend> res = JsonParse.getFriendPars(jsonObject);
+                mAdapter.setFriends(res);
+            }
+        };
+
+        SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
+        HashMap<String, JSONObject> map = new HashMap<>();
+        JSONObject jsonObject = new JSONObject();
+        try {
+            jsonObject.put("username", SavedInfo.username);
+            jsonObject.put("password",SavedInfo.password);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        map.put("getfriends",jsonObject);
+        task.execute(map);
 
         // TODO: Change Adapter to display your content
-        mAdapter = new MyFriendAdapter(getActivity(), android.R.layout.simple_list_item_1, SavedInfo.userFriends);
-        mAdapter.setHttpPostExecute(adapterHttpPostExecute);
 
-        /*mAdapter = new ArrayAdapter<DummyContent.DummyItem>(getActivity(),
-                android.R.layout.simple_list_item_1, android.R.id.text1, DummyContent.ITEMS);*/
+        mAdapter.setHttpPostExecute(adapterHttpPostExecute);
     }
 
     @Override
@@ -127,9 +155,13 @@ public class FriendsFragment extends Fragment implements AbsListView.OnItemClick
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (null != mListener) {
+            Friend friend = SavedInfo.userFriends.get(position);
+            Friend friend1 = (Friend) parent.getSelectedItem();
+            System.out.println(friend.equals(friend1));
+
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
+            //mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
         }
     }
 

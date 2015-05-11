@@ -161,7 +161,6 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
     }
 
     public void setPostItems(List<PostItem> postItems) {
-        //this.postItems = postItems;
         this.postItems.clear();
         for (PostItem postItem : postItems) {
             this.postItems.add(postItem);

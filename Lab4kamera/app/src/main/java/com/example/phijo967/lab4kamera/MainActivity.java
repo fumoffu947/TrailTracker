@@ -45,7 +45,7 @@ import java.util.Locale;
 public class MainActivity extends ActionBarActivity implements GoogleApiClient.ConnectionCallbacks,
         GoogleApiClient.OnConnectionFailedListener,LoginScreen.OnLoginInteractionListener,
         SignUp.OnSignUpInteractionListener, PostsFragment.OnPostFragmentInteractionListener,
-        ProfileScreen.OnProfileScreenInteractionListener{
+        ProfileScreen.OnProfileScreenInteractionListener, FriendsFragment.OnFragmentInteractionListener{
 
     public static final int REQUEST_IMAGE_CAPTURE = 1;
     ImageView mImageView;
@@ -289,5 +289,10 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     public void toProfile(View view) {
         switchFragment(new ProfileScreen());
+    }
+
+    @Override
+    public void onFragmentInteraction(String id) {
+
     }
 }
