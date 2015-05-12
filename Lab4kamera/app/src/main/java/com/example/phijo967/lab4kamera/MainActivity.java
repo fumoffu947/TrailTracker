@@ -25,19 +25,16 @@ import com.example.phijo967.lab4kamera.fragments.PostsFragment;
 import com.example.phijo967.lab4kamera.fragments.ProfileScreen;
 import com.example.phijo967.lab4kamera.fragments.SignUp;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
-import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.location.LocationServices;
 
-import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -268,7 +265,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     public void toFriends(View view) {
         FriendsFragment fragment = new FriendsFragment();
-        fragment.addAdapterHttpPostExecute(froendAdapterHttpPostExecute);
+        fragment.setArguments(new Bundle());
         switchFragment(fragment);
 
     }
@@ -278,7 +275,7 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
 
     public void toFlow(View view) {
         Bundle arg = new Bundle();
-        arg.putString("datatype","flow");
+        arg.putString("datatype","userflow");
         Fragment fragment = new PostsFragment();
         fragment.setArguments(arg);
         switchFragment(fragment);
@@ -292,7 +289,11 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
     }
 
     @Override
-    public void onFragmentInteraction(String id) {
-
+    public void onFriendInteraction(Boolean isSearch) {
+        Bundle arg = new Bundle();
+        arg.putBoolean("search", isSearch);
+        Fragment fragment = new FriendsFragment();
+        fragment.setArguments(arg);
+        switchFragment(fragment);
     }
 }

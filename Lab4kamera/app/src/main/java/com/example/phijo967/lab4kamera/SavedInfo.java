@@ -19,6 +19,8 @@ public class SavedInfo {
 
     public static List<Friend> userFriends = new ArrayList<>();
 
+    public static List<Friend> searchFriends = new ArrayList<>();
+
     public static List<PostItem> adapterList = new ArrayList<>();
 
     public static List<PostItem> userflow = new ArrayList<>();

@@ -1,23 +1,25 @@
 package com.example.phijo967.lab4kamera.fragments;
 
 import android.app.Activity;
+import android.app.ListFragment;
 import android.os.Bundle;
-import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.phijo967.lab4kamera.JsonParse;
 import com.example.phijo967.lab4kamera.R;
 
 import com.example.phijo967.lab4kamera.SavedInfo;
 import com.example.phijo967.lab4kamera.adapter.MyFriendAdapter;
-import com.example.phijo967.lab4kamera.fragments.dummy.DummyContent;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
 
@@ -36,7 +38,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class FriendsFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class FriendsFragment extends ListFragment implements AbsListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -59,8 +61,9 @@ public class FriendsFragment extends Fragment implements AbsListView.OnItemClick
      * Views.
      */
     private MyFriendAdapter mAdapter;
-    private HttpPostExecute adapterHttpPostExecute;
-    private HttpPostExecute httpPostExecute;
+    private HttpPostExecute httpPostExecuteGetFriends;
+    private HttpPostExecute httpPostExecuteFriendSearch;
+    private boolean isSearch = false;
 
     // TODO: Rename and change types of parameters
     public static FriendsFragment newInstance(String param1, String param2) {
@@ -79,21 +82,22 @@ public class FriendsFragment extends Fragment implements AbsListView.OnItemClick
     public FriendsFragment() {
     }
 
-    public void addAdapterHttpPostExecute(HttpPostExecute httpPostExecute) {
-        this.adapterHttpPostExecute = httpPostExecute;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
+        Bundle arg =this.getArguments();
+        if (arg.containsKey("search")) {
+            this.isSearch = arg.getBoolean("search");
         }
-        mAdapter = new MyFriendAdapter(getActivity(), android.R.layout.simple_list_item_1, SavedInfo.userFriends);
 
-        this.httpPostExecute = new HttpPostExecute() {
+        List<Friend> listInfo;
+        if (isSearch) {
+            listInfo = SavedInfo.searchFriends;
+        } else listInfo = SavedInfo.userFriends;
+
+        mAdapter = new MyFriendAdapter(getActivity(), android.R.layout.simple_list_item_1, listInfo);
+
+        this.httpPostExecuteGetFriends = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
                 List<Friend> res = JsonParse.getFriendPars(jsonObject);
@@ -101,37 +105,81 @@ public class FriendsFragment extends Fragment implements AbsListView.OnItemClick
             }
         };
 
-        SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
-        HashMap<String, JSONObject> map = new HashMap<>();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("username", SavedInfo.username);
-            jsonObject.put("password",SavedInfo.password);
+        this.httpPostExecuteFriendSearch = new HttpPostExecute() {
+            @Override
+            public void httpOnPostExecute(JSONObject jsonObject) {
+                List<Friend> res = JsonParse.getFriendPars(jsonObject);
+                SavedInfo.searchFriends = res;
+                onInteraction(true);
+            }
+        };
 
-        } catch (JSONException e) {
-            e.printStackTrace();
+        if (!isSearch) {
+            SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecuteGetFriends);
+            HashMap<String, JSONObject> map = new HashMap<>();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("username", SavedInfo.username);
+                jsonObject.put("password", SavedInfo.password);
+
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            map.put("getfriends", jsonObject);
+            task.execute(map);
         }
-        map.put("getfriends",jsonObject);
-        task.execute(map);
-
-        // TODO: Change Adapter to display your content
-
-        mAdapter.setHttpPostExecute(adapterHttpPostExecute);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_item, container, false);
+        View view = inflater.inflate(R.layout.fragment_friend, container, false);
 
         // Set the adapter
-        mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mListView = (ListView) view.findViewById(android.R.id.list);
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
+        final EditText searchEdit = (EditText) view.findViewById(R.id.friendSearchEdit);
+
+        mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(getActivity(), "TROASSATAN", Toast.LENGTH_LONG).show();
+            }
+        });
+        setListAdapter(mAdapter);
+
+        Button button = (Button) view.findViewById(R.id.friendSearchButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String partusernameSearch = searchEdit.getText().toString();
+
+                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecuteFriendSearch);
+                HashMap<String, JSONObject> map = new HashMap<>();
+                JSONObject jsonObject = new JSONObject();
+                try {
+                    jsonObject.put("username", SavedInfo.username);
+                    jsonObject.put("password", SavedInfo.password);
+                    jsonObject.put("partusername", partusernameSearch);
+
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+                map.put("searchuser", jsonObject);
+                task.execute(map);
+
+            }
+        });
+
 
         return view;
+    }
+
+    public void onInteraction(Boolean b) {
+        if (mListener != null) {
+            mListener.onFriendInteraction(b);
+        }
     }
 
     @Override
@@ -151,18 +199,15 @@ public class FriendsFragment extends Fragment implements AbsListView.OnItemClick
         mListener = null;
     }
 
-
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            Friend friend = SavedInfo.userFriends.get(position);
-            Friend friend1 = (Friend) parent.getSelectedItem();
-            System.out.println(friend.equals(friend1));
+            Toast.makeText(getActivity(), "DINJAVLA ASSSSSSSSSSS", Toast.LENGTH_LONG).show();
+    }
 
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            //mListener.onFragmentInteraction(DummyContent.ITEMS.get(position).id);
-        }
+
+    @Override
+    public void onListItemClick(ListView l, View v, int position, long id) {
+        Toast.makeText(getActivity(),"DINJAVLA BANAN", Toast.LENGTH_LONG).show();
     }
 
     /**
@@ -178,6 +223,8 @@ public class FriendsFragment extends Fragment implements AbsListView.OnItemClick
         }
     }
 
+
+
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -190,7 +237,7 @@ public class FriendsFragment extends Fragment implements AbsListView.OnItemClick
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(String id);
+        public void onFriendInteraction(Boolean isSearch);
     }
 
 }

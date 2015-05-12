@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context="com.example.phijo967.lab4kamera.fragments.FriendsFragment">
+
+    <EditText
+        android:id="@+id/friendSearchEdit"
+        android:hint="Sreach for friends"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_toStartOf="@+id/friendSearchButton" />
+
+    <Button
+        android:id="@+id/friendSearchButton"
+        android:text="Search"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentTop="true"/>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/friendSearchEdit">
+
+        <GridView android:id="@android:id/list" android:layout_width="match_parent"
+            android:layout_height="match_parent" android:numColumns="2" />
+
+        <TextView android:id="@android:id/empty" android:layout_width="match_parent"
+            android:layout_height="match_parent" android:gravity="center" />
+
+    </FrameLayout>
+</RelativeLayout>

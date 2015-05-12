@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
@@ -63,6 +64,7 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
     private MyListAdapter mAdapter;
     private HttpPostExecute httpPostExecute;
     private String dataType;
+    private boolean update = false;
 
     // TODO: Rename and change types of parameters
     public static PostsFragment newInstance(String param1, String param2) {
@@ -84,20 +86,19 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-         Bundle arg =this.getArguments();
+        Bundle arg =this.getArguments();
         this.dataType = arg.getString("datatype");
+
+        SavedInfo.adapterList.clear();
+
         mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.adapterList);
 
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
         this.httpPostExecute = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
                 List<PostItem> res = JsonParse.postParse(jsonObject);
                 mAdapter.setPostItems(res);
-                if (dataType.equals("userdata")) {
+                if (dataType.equals("userpost")) {
                     SavedInfo.userpost = res;
                 }
                 else {
@@ -105,9 +106,13 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
                 }
             }
         };
+        httpCall();
+    }
+
+    private void httpCall() {
         if (dataType.equals("userpost")) {
 
-            if(SavedInfo.userpost.isEmpty()) {
+            if(SavedInfo.userpost.isEmpty() || this.update) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
                 HashMap<String, JSONObject> map = new HashMap<>();
                 JSONObject jsonObject = new JSONObject();
@@ -120,39 +125,51 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
                     e.printStackTrace();
                 }
                 map.put("getuserpost",jsonObject);
+                update = false;
                 task.execute(map);
+            }
+            else {
+                mAdapter.setPostItems(SavedInfo.userpost);
             }
         }else {
             //mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.userflow);
-            if (SavedInfo.userflow.isEmpty()) {
+            if (SavedInfo.userflow.isEmpty() || this.update) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
                 HashMap<String, JSONObject> map = new HashMap<>();
                 JSONObject jsonObject = new JSONObject();
                 try {
-                    jsonObject.put("username", "test1");
-                    jsonObject.put("password", "test1");
+                    jsonObject.put("username", SavedInfo.username);
+                    jsonObject.put("password", SavedInfo.password);
                     jsonObject.put("id_u", SavedInfo.id_u);
 
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
                 map.put("getuserflowpost", jsonObject);
+                update = false;
                 task.execute(map);
+            }
+            else {
+                mAdapter.setPostItems(SavedInfo.userflow);
             }
 
         }
-        ArrayList<Comment> comments = new ArrayList<>();
-        comments.add(new Comment("test2", "test2son", "a comment"));
-        List<List<Double>> posL = new ArrayList<>();
-        posL.add(new ArrayList<Double>());
-        PostItem object = new PostItem("test", "testSon", "a post", "this is a test post", 1, 4, comments, posL, new ArrayList<Bitmap>());
-        SavedInfo.testContentPost.add(object);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_posts, container, false);
+
+        //update button for posts
+        Button button = (Button) view.findViewById(R.id.postFragmentUpdatePostsButton);
+        button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                update = true;
+                httpCall();
+            }
+        });
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
