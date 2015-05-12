@@ -27,11 +27,16 @@ public class MyFriendAdapter extends ArrayAdapter<Friend> {
 
     private final Context context;
     private List<Friend> friends;
+    private HttpPostExecute httpPostExecute;
 
     public MyFriendAdapter(Context context, int resource, List<Friend> objects) {
         super(context, resource, objects);
         this.friends = objects;
         this.context = context;
+    }
+
+    public void setHttpPostExecute(HttpPostExecute httpPostExecute) {
+        this.httpPostExecute = httpPostExecute;
     }
 
     static class FriendViewHolder {
@@ -61,7 +66,7 @@ public class MyFriendAdapter extends ArrayAdapter<Friend> {
         holder.name.setText(friend.name);
         holder.lastname.setText(friend.lastname);
 
-        /*holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
+        holder.relativeLayout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute); // post the comment
@@ -77,7 +82,7 @@ public class MyFriendAdapter extends ArrayAdapter<Friend> {
                 map.put("getuser",jsonObject);
                 task.execute(map);
             }
-        });*/
+        });
         return rootView;
     }
 

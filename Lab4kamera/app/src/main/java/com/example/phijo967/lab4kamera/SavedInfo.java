@@ -1,6 +1,7 @@
 package com.example.phijo967.lab4kamera;
 
 import com.example.phijo967.lab4kamera.fragments.Friend;
+import com.example.phijo967.lab4kamera.fragments.ProfileScreen;
 import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostItem;
 
 import java.util.ArrayList;
@@ -16,6 +17,8 @@ public class SavedInfo {
     public static String password = null;
 
     public static ProfileInfo profileInfo;
+
+    public static ProfileInfo searchProfile;
 
     public static List<Friend> userFriends = new ArrayList<>();
 

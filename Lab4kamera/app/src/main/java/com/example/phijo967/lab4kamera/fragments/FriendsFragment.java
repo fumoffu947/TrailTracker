@@ -64,6 +64,7 @@ public class FriendsFragment extends ListFragment implements AbsListView.OnItemC
     private HttpPostExecute httpPostExecuteGetFriends;
     private HttpPostExecute httpPostExecuteFriendSearch;
     private boolean isSearch = false;
+    private HttpPostExecute adapterHttpPostExecute;
 
     // TODO: Rename and change types of parameters
     public static FriendsFragment newInstance(String param1, String param2) {
@@ -89,6 +90,13 @@ public class FriendsFragment extends ListFragment implements AbsListView.OnItemC
         if (arg.containsKey("search")) {
             this.isSearch = arg.getBoolean("search");
         }
+
+        this.adapterHttpPostExecute = new HttpPostExecute() {
+            @Override
+            public void httpOnPostExecute(JSONObject jsonObject) {
+                Bundle result = JsonParse.profileParse(jsonObject);
+            }
+        };
 
         List<Friend> listInfo;
         if (isSearch) {

@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.example.phijo967.lab4kamera.SearchProfile"
+    android:padding="5dp">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/profileTop">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="150dp"
+            android:minWidth="150dp"
+            android:maxHeight="150dp"
+            android:maxWidth="150dp"
+            android:id="@+id/profileScreenProfileImg"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name"
+            android:id="@+id/profileScreenNameText"
+            android:layout_alignParentTop="true"
+            android:layout_toEndOf="@+id/profileScreenProfileImg"
+            android:layout_marginTop="23dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lastname"
+            android:id="@+id/profileScreenLastnameText"
+            android:layout_below="@+id/profileScreenNameText"
+            android:layout_toEndOf="@+id/profileScreenProfileImg" />
+    </RelativeLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:textSize="15dp"
+        android:text="Number Of Paths: 40"
+        android:id="@+id/profileScreenNumberOfPathsText"
+        android:layout_below="@id/profileTop"/>
+
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:padding="4dp"
+        android:text="Number Of Steps: 400"
+        android:id="@+id/profileScreenNumberOfStepsText"
+        android:layout_below="@+id/profileScreenNumberOfPathsText"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="15dp"
+        android:padding="4dp"
+        android:text="Length Went: 200m"
+        android:id="@+id/profileScreenLengthWentText"
+        android:layout_below="@id/profileScreenNumberOfStepsText" />
+
+
+</RelativeLayout>

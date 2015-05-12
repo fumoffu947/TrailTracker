@@ -101,8 +101,8 @@ public class ProfileScreen extends Fragment {
         HashMap<String, JSONObject> map = new HashMap<>();
         JSONObject jsonObject = new JSONObject();
         try {
-            jsonObject.put("username", "test1");
-            jsonObject.put("password","test1");
+            jsonObject.put("username", SavedInfo.username);
+            jsonObject.put("password",SavedInfo.password);
             jsonObject.put("id_u",SavedInfo.id_u);
 
         } catch (JSONException e) {
