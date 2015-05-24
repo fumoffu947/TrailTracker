@@ -1,10 +1,72 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context="com.example.phijo967.lab4kamera.fragments.Options">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView android:layout_width="match_parent" android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+    <Button
+        android:id="@+id/optionsUpdateFriendRequestsButton"
+        android:text="@string/option_update_friend_request"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"/>
 
-</FrameLayout>
+    <FrameLayout
+        android:id="@+id/optionListHolder"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_below="@id/optionsUpdateFriendRequestsButton">
+
+        <ListView
+            android:id="@android:id/list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <TextView
+            android:id="@android:id/empty"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center" />
+
+    </FrameLayout>
+
+    <Button
+        android:id="@+id/optionTakePictureButton"
+        android:text="@string/option_take_picture_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/optionListHolder"/>
+
+    <Button
+        android:id="@+id/optionUpdateProfilePicture"
+        android:text="@string/option_update_profile_pic_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/optionTakePictureButton"/>
+    <LinearLayout
+        android:minHeight="150dp"
+        android:minWidth="150dp"
+        android:id="@+id/optionsPicHolder"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/optionListHolder">
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:minHeight="150dp"
+            android:minWidth="150dp"
+            android:maxHeight="150dp"
+            android:maxWidth="150dp"
+            android:id="@+id/optionProfileImg"/>
+        </LinearLayout>
+
+
+    <Button
+        android:id="@+id/optionLogoutButton"
+        android:text="@string/option_logout_button"
+        android:background="@color/common_signin_btn_default_background"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/optionsPicHolder"/>
+
+</RelativeLayout>

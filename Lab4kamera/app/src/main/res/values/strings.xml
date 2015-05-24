@@ -1,12 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="app_name">Lab4kamera</string>
+    <string name="app_name">Paths</string>
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
     <string name="take_picture">Take picture!</string>
 
-<!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="main_bar_profile">Profile</string>
+    <string name="main_bar_new_path">Path</string>
+    <string name="main_bar_flow">Flow</string>
+    <string name="main_bar_friends">Friends</string>
+    <string name="main_bar_messages">Message</string>
+    <string name="main_bar_options">Options</string>
+
+    <string name="message_comment_default">comment</string>
+
+    <string name="friend_fragment_search_button">Search</string>
+    <string name="friend_fragment_search_hint">Search for friends</string>
+
+    <string name="login_fragment_titel">Login Screen</string>
+    <string name="login_username_hint">Username</string>
+    <string name="login_password_hint">Password</string>
+    <string name="login_login_button">Login</string>
+    <string name="login_signup_text_button">Sign up</string>
+
+    <string name="option_update_friend_request">Update Friend Requests</string>
+    <string name="option_take_picture_button">Take picture</string>
+    <string name="option_update_profile_pic_button">Update profileimage</string>
+    <string name="option_logout_button">Logout</string>
+    <string name="path_creation_path_name_hint">Path Name</string>
+    <string name="path_creation_start_tracking_button">Start Tracking</string>
+    <string name="path_creation_add_pic_button">Add Pic</string>
+    <string name="path_creation_description_hint">Description</string>
+    <string name="path_creation_lenght_went_text">Lenght went:</string>
+    <string name="path_creation_steps_taken_text">Steps Taken:</string>
+    <string name="path_creation_post_path_button">Post Path</string>
+    <string name="posts_update_button">Update</string>
+    <string name="profile_screen_name_text">Name</string>
+    <string name="profile_screen_number_of_paths_text">Number Of Paths: 40</string>
+    <string name="profile_screen_latname_text">Lastname</string>
+    <string name="profile_screen_number_of_steps_text">Number Of Steps: 400</string>
+    <string name="profile_screen_lenght_went_text">Length Went: 200m</string>
+    <string name="search_profile_name_text">Name</string>
+    <string name="search_profile_lastname_text">Lastname</string>
+    <string name="search_profile_number_of_paths_text">Number Of Paths: 40</string>
+    <string name="search_profile_number_of_steps_text">Number Of Steps: 400</string>
+    <string name="search_profile_lenght_went_text">Length Went: 200m</string>
+    <string name="search_profile_add_friend_request_button">Add friend request</string>
+    <string name="search_profile_follow_button">Follow</string>
+    <string name="signup_fragment_title_text">Sign Up</string>
+    <string name="signup_fragment_name_hint">Name</string>
+    <string name="signup_fragment_lastname_hint">Lastname</string>
+    <string name="signup_fragment_email_hint">Email</string>
+    <string name="signup_fragment_username_hint">Username</string>
+    <string name="signup_fragment_password_hint">Password</string>
+    <string name="signup_fragment_password_verification_hint">Password verification</string>
+    <string name="signup_fragment_signup_button">Sign up</string>
+    <string name="signup_fragment_back_button">Back</string>
+    <string name="friend_layout_name_default">Name</string>
+    <string name="friend_layout_lastname_default">Lastname</string>
+    <string name="friend_request_accept_button">Accept</string>
+    <string name="friend_request_decline_button">Decline</string>
+    <string name="message_layout_default">Message</string>
+    <string name="message_fragment_edit_hint">Mesage</string>
+    <string name="message_fragment_send_button">Send</string>
+    <string name="path_creation_name_text">Name of Post</string>
+    <string name="path_creation_show_map_text">Show Map</string>
+    <string name="path_creation_deafult_description_text">Description of the Path</string>
+    <string name="path_creation_deafult_username_text">user name</string>
+    <string name="path_creation_default_userlastname">User Lastname</string>
+    <string name="like_text_default">0</string>
+    <string name="like_default_button">Like</string>
+    <string name="path_creation_comment_edit_hint">Comment</string>
+    <string name="path_creation_add_comment_button">Add comment</string>
 
 </resources>

@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.example.phijo967.lab4kamera.SearchProfile"
+    tools:context="com.example.phijo967.lab4kamera.fragments.SearchProfile"
     android:padding="5dp">
 
     <RelativeLayout
@@ -15,53 +15,63 @@
             android:minWidth="150dp"
             android:maxHeight="150dp"
             android:maxWidth="150dp"
-            android:id="@+id/profileScreenProfileImg"/>
+            android:id="@+id/profileSearchProfileImg"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name"
-            android:id="@+id/profileScreenNameText"
-            android:layout_alignParentTop="true"
-            android:layout_toEndOf="@+id/profileScreenProfileImg"
-            android:layout_marginTop="23dp" />
+            android:text="@string/search_profile_name_text"
+            android:id="@+id/profileSearchNameText"
+            android:layout_above="@+id/profileSearchLastnameText"
+            android:layout_toEndOf="@+id/profileSearchProfileImg" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Lastname"
-            android:id="@+id/profileScreenLastnameText"
-            android:layout_below="@+id/profileScreenNameText"
-            android:layout_toEndOf="@+id/profileScreenProfileImg" />
+            android:text="@string/search_profile_lastname_text"
+            android:id="@+id/profileSearchLastnameText"
+            android:layout_alignBottom="@+id/profileSearchProfileImg"
+            android:layout_toEndOf="@+id/profileSearchProfileImg" />
     </RelativeLayout>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
         android:padding="4dp"
-        android:textSize="15dp"
-        android:text="Number Of Paths: 40"
-        android:id="@+id/profileScreenNumberOfPathsText"
+        android:textSize="15sp"
+        android:text="@string/search_profile_number_of_paths_text"
+        android:id="@+id/profileSearchNumberOfPathsText"
         android:layout_below="@id/profileTop"/>
 
 
-
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
+        android:textSize="15sp"
         android:padding="4dp"
-        android:text="Number Of Steps: 400"
-        android:id="@+id/profileScreenNumberOfStepsText"
-        android:layout_below="@+id/profileScreenNumberOfPathsText"/>
+        android:text="@string/search_profile_lenght_went_text"
+        android:id="@+id/profileSearchLengthWentText"
+        android:layout_below="@id/profileSearchNumberOfPathsText" />
 
-    <TextView
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textSize="15dp"
-        android:padding="4dp"
-        android:text="Length Went: 200m"
-        android:id="@+id/profileScreenLengthWentText"
-        android:layout_below="@id/profileScreenNumberOfStepsText" />
+        android:layout_below="@id/profileSearchLengthWentText">
 
+        <Button
+            android:id="@+id/profileSearchAddFriendButton"
+            android:layout_weight="1"
+            android:layout_marginTop="70dp"
+            android:text="@string/search_profile_add_friend_request_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+        <Button
+            android:id="@+id/profileSearchFollowButton"
+            android:text="@string/search_profile_follow_button"
+            android:layout_weight="1"
+            android:layout_marginTop="70dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
+        </LinearLayout>
 </RelativeLayout>

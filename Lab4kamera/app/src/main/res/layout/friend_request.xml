@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/friendRequestNameText"
+        android:layout_weight="1"
+        android:text="@string/friend_layout_name_default"
+        android:textSize="30sp"
+        android:paddingStart="5dp"
+        android:paddingEnd="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <TextView
+        android:id="@+id/friendRequestLstnameText"
+        android:gravity="bottom"
+        android:layout_weight="1"
+        android:text="@string/friend_layout_lastname_default"
+        android:textSize="30sp"
+        android:paddingEnd="5dp"
+        android:paddingStart="5dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/friendRequestAccept"
+        android:text="@string/friend_request_accept_button"
+        android:textSize="12sp"
+        android:layout_width="70dp"
+        android:layout_height="wrap_content" />
+
+    <Button
+        android:id="@+id/friendRequestDecline"
+        android:text="@string/friend_request_decline_button"
+        android:textSize="12sp"
+        android:layout_width="73dp"
+        android:layout_height="wrap_content" />
+
+</LinearLayout>

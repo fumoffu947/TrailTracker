@@ -12,7 +12,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
-        android:text="Login Screen"
+        android:text="@string/login_fragment_titel"
         android:id="@+id/textView"
         android:layout_centerHorizontal="true"/>
 
@@ -27,7 +27,7 @@
             android:layout_height="wrap_content">
 
             <EditText
-                android:hint="Username"
+                android:hint="@string/login_username_hint"
                 android:inputType="text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -44,7 +44,7 @@
             <EditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="@string/login_password_hint"
                 android:inputType="textPassword"
                 android:ems="10"
                 android:id="@+id/signUpPasswordEdit"
@@ -55,7 +55,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Login"
+            android:text="@string/login_login_button"
             android:id="@+id/loginbutton"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
@@ -68,7 +68,7 @@
         android:layout_centerHorizontal="true"
         android:textAppearance="@style/Base.TextAppearance.AppCompat.Large"
         android:textColor="@color/wallet_link_text_light"
-        android:text="Sign up"
+        android:text="@string/login_signup_text_button"
         android:clickable="true"
         android:onClick="signUpFragment"
         android:layout_alignParentBottom="true"/>

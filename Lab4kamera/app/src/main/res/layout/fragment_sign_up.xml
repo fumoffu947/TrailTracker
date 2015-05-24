@@ -16,7 +16,7 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:layout_centerHorizontal="true"
-        android:text="SignUp"
+        android:text="@string/signup_fragment_title_text"
         android:id="@+id/signuphead"
         android:layout_gravity="center_horizontal" />
 
@@ -30,52 +30,51 @@
             android:layout_height="wrap_content"
             android:id="@+id/signUpNameEdit"
             android:inputType="textPersonName"
-            android:hint="Name"/>
+            android:hint="@string/signup_fragment_name_hint"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signUpLastNameEdit"
             android:inputType="textPersonName"
-            android:hint="Lastname"/>
+            android:hint="@string/signup_fragment_lastname_hint"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:inputType="textEmailAddress"
             android:id="@+id/signUpEmailEdit"
-            android:hint="Email"/>
+            android:hint="@string/signup_fragment_email_hint"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signUpUsernameEdit"
             android:inputType="text"
-            android:hint="Username"/>
+            android:hint="@string/signup_fragment_username_hint"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signUpPasswordEdit"
             android:inputType="textPassword"
-            android:hint="Password"/>
+            android:hint="@string/signup_fragment_password_hint"/>
 
         <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/signUpPasswordCheckEdit"
             android:inputType="textPassword"
-            android:hint="Password verification"/>
+            android:hint="@string/signup_fragment_password_verification_hint"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Signup"
+            android:text="@string/signup_fragment_signup_button"
             android:id="@+id/signUpButton"
             android:layout_gravity="center_horizontal"/>
 
     </LinearLayout>
-
 
     <TextView
         android:layout_width="wrap_content"
@@ -83,7 +82,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:textColor="@color/wallet_link_text_light"
-        android:text="Back"
+        android:text="@string/signup_fragment_back_button"
         android:clickable="true"
         android:onClick="backToLogin"
         android:id="@+id/signUpBackText"

@@ -7,16 +7,29 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Name of Post"
+        android:text="@string/path_creation_name_text"
         android:id="@+id/postName"
         android:layout_alignParentTop="true"
         android:layout_alignParentStart="true" />
 
-    <ScrollView
+    <TextView
+        android:height="100dp"
+        android:text="@string/path_creation_show_map_text"
+        android:textSize="50sp"
+        android:background="@color/grass_green"
+        android:textColor="@color/abc_primary_text_disable_only_material_dark"
+        android:clickable="true"
+        android:gravity="center"
+        android:id="@+id/postMapButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/postName"/>
+
+    <HorizontalScrollView
         android:id="@+id/postScrollViewPic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/postName"
+        android:layout_below="@+id/postMapButton"
         android:layout_alignParentStart="true">
 
         <LinearLayout
@@ -27,20 +40,20 @@
             android:minHeight="100dp">
 
         </LinearLayout>
-    </ScrollView>
+    </HorizontalScrollView>
 
     <TextView
         android:id="@+id/postDescription"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Description of the Path"
+        android:text="@string/path_creation_deafult_description_text"
         android:minHeight="40dp"
         android:layout_below="@id/postScrollViewPic"
         android:layout_alignParentStart="true"/>
 
     <TextView
         android:id="@+id/postUserName"
-        android:text="user nmae"
+        android:text="@string/path_creation_deafult_username_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/postDescription"
@@ -48,7 +61,7 @@
 
     <TextView
         android:id="@+id/postUserLastname"
-        android:text="User Lastname"
+        android:text="@string/path_creation_default_userlastname"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/postDescription"
@@ -56,17 +69,30 @@
         android:paddingLeft="10dp"/>
 
     <TextView
-        android:id="@+id/postLikes"
-        android:minWidth="20dp"
-        android:paddingLeft="10dp"
+        android:paddingRight="5dp"
+        android:text="@string/like_text_default"
+        android:textSize="20sp"
+        android:id="@+id/postNumberOfLikes"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/postDescription"
-        android:layout_toEndOf="@id/postUserLastname"/>
+        android:layout_alignBottom="@+id/postLikeButton"
+        android:layout_toStartOf="@+id/postLikeButton"/>
+
+    <Button
+        android:id="@+id/postLikeButton"
+        android:layout_width="45dp"
+        android:layout_height="30dp"
+        android:layout_margin="0dp"
+        android:padding="0dp"
+        android:text="@string/like_default_button"
+        android:textSize="10sp"
+        android:layout_below="@+id/postDescription"
+        android:layout_alignParentRight="true"/>
 
 
 
     <ScrollView
+        android:paddingTop="5dp"
         android:id="@+id/postScrollViewComment"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -78,19 +104,12 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
-
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Comments"/>
-
-
         </LinearLayout>
     </ScrollView>
 
     <EditText
         android:id="@+id/postAddCommentEdit"
-        android:hint="Comment"
+        android:hint="@string/path_creation_comment_edit_hint"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/postScrollViewComment"
@@ -100,7 +119,7 @@
         android:id="@+id/postPostComment"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add comment"
+        android:text="@string/path_creation_add_comment_button"
         android:layout_below="@+id/postAddCommentEdit"
         android:layout_alignParentStart="true"/>
 </RelativeLayout>

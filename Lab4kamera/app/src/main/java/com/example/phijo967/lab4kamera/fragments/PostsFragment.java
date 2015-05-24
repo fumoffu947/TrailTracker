@@ -1,7 +1,6 @@
 package com.example.phijo967.lab4kamera.fragments;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,23 +9,23 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.phijo967.lab4kamera.JsonParse;
 import com.example.phijo967.lab4kamera.adapter.MyListAdapter;
 import com.example.phijo967.lab4kamera.R;
 
-import com.example.phijo967.lab4kamera.SavedInfo;
-import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.Comment;
-import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostItem;
+import com.example.phijo967.lab4kamera.datastruct.SavedInfo;
+import com.example.phijo967.lab4kamera.datastruct.PostItem;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -36,52 +35,16 @@ import java.util.List;
  * Large screen devices (such as tablets) are supported by replacing the ListView
  * with a GridView.
  * <p/>
- * Activities containing this fragment MUST implement the {@link com.example.phijo967.lab4kamera.fragments.PostsFragment.OnPostFragmentInteractionListener}
  * interface.
  */
-public class PostsFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class PostsFragment extends Fragment {
 
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-
-    private OnPostFragmentInteractionListener mListener;
-
-    /**
-     * The fragment's ListView/GridView.
-     */
     private AbsListView mListView;
 
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
     private MyListAdapter mAdapter;
     private HttpPostExecute httpPostExecute;
     private String dataType;
     private boolean update = false;
-
-    // TODO: Rename and change types of parameters
-    public static PostsFragment newInstance(String param1, String param2) {
-        PostsFragment fragment = new PostsFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public PostsFragment() {
-    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -93,6 +56,7 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
 
         mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.adapterList);
 
+        // interface to set the result in the adapter and the right list in SavedInfo
         this.httpPostExecute = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
@@ -110,44 +74,50 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
     }
 
     private void httpCall() {
-        if (dataType.equals("userpost")) {
-
+        if (dataType.equals("userpost")) { // gets the postFlow or current users posts depending on arguments input
+            // if update is presed then posts is updated
             if(SavedInfo.userpost.isEmpty() || this.update) {
-                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
-                HashMap<String, JSONObject> map = new HashMap<>();
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("username", SavedInfo.username);
-                    jsonObject.put("password",SavedInfo.password);
-                    jsonObject.put("id_u",SavedInfo.id_u);
+                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
+                if (task.inNetworkAvailable()) {
+                    //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
+                    HashMap<String, JSONObject> map = new HashMap<>();
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("username", SavedInfo.username);
+                        jsonObject.put("password", SavedInfo.password);
+                        jsonObject.put("id_u", SavedInfo.id_u);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                map.put("getuserpost",jsonObject);
-                update = false;
-                task.execute(map);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    map.put("getuserpost", jsonObject);
+                    update = false;
+                    task.execute(map);
+                } else Toast.makeText(getActivity(), "No internet connection",Toast.LENGTH_SHORT).show();
             }
             else {
                 mAdapter.setPostItems(SavedInfo.userpost);
             }
         }else {
-            //mAdapter = new MyListAdapter(getActivity(),android.R.layout.simple_list_item_1, SavedInfo.userflow);
+            // updates the userflow
             if (SavedInfo.userflow.isEmpty() || this.update) {
-                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
-                HashMap<String, JSONObject> map = new HashMap<>();
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("username", SavedInfo.username);
-                    jsonObject.put("password", SavedInfo.password);
-                    jsonObject.put("id_u", SavedInfo.id_u);
+                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
+                if (task.inNetworkAvailable()) {
+                    //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
+                    HashMap<String, JSONObject> map = new HashMap<>();
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("username", SavedInfo.username); //gets the userflow foe the current user
+                        jsonObject.put("password", SavedInfo.password); // ( friends of user and the one tha the user follows)
+                        jsonObject.put("id_u", SavedInfo.id_u);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                map.put("getuserflowpost", jsonObject);
-                update = false;
-                task.execute(map);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    map.put("getuserflowpost", jsonObject);
+                    update = false;
+                    task.execute(map);
+                } else Toast.makeText(getActivity(), "No internet connection",Toast.LENGTH_SHORT).show();
             }
             else {
                 mAdapter.setPostItems(SavedInfo.userflow);
@@ -159,81 +129,24 @@ public class PostsFragment extends Fragment implements AbsListView.OnItemClickLi
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_posts, container, false);
+        View rootview = inflater.inflate(R.layout.fragment_posts, container, false);
 
         //update button for posts
-        Button button = (Button) view.findViewById(R.id.postFragmentUpdatePostsButton);
+        Button button = (Button) rootview.findViewById(R.id.postFragmentUpdatePostsButton);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v) {
+            public void onClick(View v) { // update userflow or userpost depending on argeument input
                 update = true;
                 httpCall();
             }
         });
 
+        View view = (FrameLayout) rootview.findViewById(R.id.postFragmentListHolder);
+
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
-
-        return view;
+        return rootview;
     }
-
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        try {
-            mListener = (OnPostFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnPostFragmentInteractionListener");
-        }
-    }
-
-    @Override
-    public void onDetach() {
-        super.onDetach();
-        mListener = null;
-    }
-
-
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            //mListener.onPostFragmentInteraction(PostContentHolder.ITEMS.get(position).id);
-        }
-    }
-
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyView instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
-
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-    public interface OnPostFragmentInteractionListener {
-        // TODO: Update argument type and name
-        public void onPostFragmentInteraction(String id);
-    }
-
 }

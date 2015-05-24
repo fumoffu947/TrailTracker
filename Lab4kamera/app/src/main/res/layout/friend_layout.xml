@@ -7,8 +7,8 @@
 
     <TextView
         android:id="@+id/friendNameText"
-        android:text="Name"
-        android:textSize="40dp"
+        android:text="@string/friend_layout_name_default"
+        android:textSize="40sp"
         android:paddingStart="5dp"
         android:paddingEnd="5dp"
         android:layout_width="wrap_content"
@@ -18,8 +18,8 @@
 
     <TextView
         android:id="@+id/friendLstnameText"
-        android:text="Lastname"
-        android:textSize="40dp"
+        android:text="@string/friend_layout_lastname_default"
+        android:textSize="40sp"
         android:paddingEnd="5dp"
         android:paddingStart="5dp"
         android:layout_width="wrap_content"

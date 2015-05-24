@@ -72,10 +72,11 @@ public class SignUp extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        //show message ti user if en error is returned els it switches to login fragment
         this.httpPostExecute = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
-                String result = JsonParse.addUserParse(jsonObject);
+                String result = JsonParse.resultParse(jsonObject);
                 switch (result) {
                     case "emailError":
                         Toast.makeText(getActivity(), "Email is occupied", Toast.LENGTH_LONG).show();
@@ -85,7 +86,7 @@ public class SignUp extends Fragment {
                         break;
                     case "user added":
                         Toast.makeText(getActivity(), "Sign up successful", Toast.LENGTH_LONG).show();
-                        onButtonPressed();
+                        switchToLogin();
                 }
 
             }
@@ -107,28 +108,74 @@ public class SignUp extends Fragment {
                 EditText email = (EditText) rootView.findViewById(R.id.signUpEmailEdit);
                 EditText username = (EditText) rootView.findViewById(R.id.signUpUsernameEdit);
                 EditText password = (EditText) rootView.findViewById(R.id.signUpPasswordEdit);
+                EditText passwordVerification = (EditText) rootView.findViewById(R.id.signUpPasswordCheckEdit);
 
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("name",name.getText().toString());
-                    jsonObject.put("lastname",lastname.getText().toString());
-                    jsonObject.put("email",email.getText().toString());
-                    jsonObject.put("username", username.getText().toString());
-                    jsonObject.put("password", password.getText().toString());
-                    HashMap<String,JSONObject> map = new HashMap();
-                    map.put("adduser",jsonObject);
-                    SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
-                    task.execute(map);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                if (checkIfOkInput(name, lastname, email, username, password, passwordVerification)) return;
+                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
+                if (task.inNetworkAvailable()) {
+
+                    JSONObject jsonObject = new JSONObject();
+                    try { // adds a user if input is ok
+                        jsonObject.put("name", name.getText().toString());
+                        jsonObject.put("lastname", lastname.getText().toString());
+                        jsonObject.put("email", email.getText().toString());
+                        jsonObject.put("username", username.getText().toString());
+                        jsonObject.put("password", password.getText().toString());
+                        //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
+                        HashMap<String, JSONObject> map = new HashMap();
+                        map.put("adduser", jsonObject);
+                        task.execute(map);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                } else Toast.makeText(getActivity(), "No internet connection",Toast.LENGTH_SHORT).show();
             }
         });
         return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed() {
+    /**
+     * Checks if the input fields are ok length
+     * @return
+     * returns false if ok true if input is not ok
+     */
+    private boolean checkIfOkInput(EditText name, EditText lastname, EditText email, EditText username, EditText password, EditText passwordVerification) {
+        if (name.getText().toString().length() < 2) {
+            Toast.makeText(getActivity(), "Pleas enter a longer name.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if ( lastname.getText().toString().length() < 2) {
+            Toast.makeText(getActivity(), "Pleas enter a longer lastname.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (!email.getText().toString().contains("@")) {
+            Toast.makeText(getActivity(), "Pleas enter a correct email.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (username.getText().toString().length() < 5) {
+            Toast.makeText(getActivity(), "Pleas enter a longer username.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (username.getText().toString().length() > 32) {
+            Toast.makeText(getActivity(), "Pleas enter a shorter username.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (password.getText().toString().length() < 7 ) {
+            Toast.makeText(getActivity(), "Pleas enter a longer password.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (password.getText().toString().length() > 32) {
+            Toast.makeText(getActivity(), "Pleas enter a shorter password.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        if (!password.getText().toString().equals(passwordVerification.getText().toString())) {
+            Toast.makeText(getActivity(), "Password dont match.", Toast.LENGTH_SHORT).show();
+            return true;
+        }
+        return false;
+    }
+
+    public void switchToLogin() {
         if (mListener != null) {
             mListener.onSigUpInteraction();
         }
@@ -145,24 +192,14 @@ public class SignUp extends Fragment {
         }
     }
 
-    @Override
+    @Override // auto generated
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnSignUpInteractionListener {
-        // TODO: Update argument type and name
+
         public void onSigUpInteraction();
     }
 

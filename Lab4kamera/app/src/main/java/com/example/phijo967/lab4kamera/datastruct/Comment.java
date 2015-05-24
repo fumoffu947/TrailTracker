@@ -1,4 +1,4 @@
-package com.example.phijo967.lab4kamera.fragments.arrayadapterContent;
+package com.example.phijo967.lab4kamera.datastruct;
 
 /**
  * Created by fumoffu947 on 2015-05-10.

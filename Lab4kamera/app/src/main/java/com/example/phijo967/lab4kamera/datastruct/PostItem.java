@@ -1,6 +1,8 @@
-package com.example.phijo967.lab4kamera.fragments.arrayadapterContent;
+package com.example.phijo967.lab4kamera.datastruct;
 
 import android.graphics.Bitmap;
+
+import com.example.phijo967.lab4kamera.datastruct.Comment;
 
 import java.util.List;
 

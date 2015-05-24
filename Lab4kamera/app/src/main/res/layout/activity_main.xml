@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_height="match_parent"
     android:layout_width="match_parent"
@@ -9,16 +8,17 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/linearLayout">
+        android:id="@+id/mainBarHolder">
 
         <TextView
-            android:background="@color/background_floating_material_dark"
+            android:background="@color/grass_green"
             android:textColor="@color/abc_primary_text_disable_only_material_dark"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:gravity="center"
             android:id="@+id/profileTab"
-            android:text="Profile"
+            android:text="@string/main_bar_profile"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -26,13 +26,14 @@
             android:onClick="toProfile"/>
 
         <TextView
-            android:background="@color/background_floating_material_dark"
+            android:background="@color/grass_green"
             android:textColor="@color/abc_primary_text_disable_only_material_dark"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:gravity="center"
+            android:textSize="14sp"
             android:id="@+id/postPathTab"
-            android:text="New Path"
+            android:text="@string/main_bar_new_path"
             android:layout_weight="1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -40,13 +41,14 @@
             android:onClick="toNewPath"/>
 
         <TextView
-            android:background="@color/background_floating_material_dark"
+            android:background="@color/grass_green"
             android:textColor="@color/abc_primary_text_disable_only_material_dark"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:gravity="center"
             android:id="@+id/flowTab"
-            android:text="Flow"
+            android:text="@string/main_bar_flow"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -54,13 +56,14 @@
             android:onClick="toFlow"/>
 
         <TextView
-            android:background="@color/background_floating_material_dark"
+            android:background="@color/grass_green"
             android:textColor="@color/abc_primary_text_disable_only_material_dark"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:gravity="center"
             android:id="@+id/friendsTab"
-            android:text="Friends"
+            android:text="@string/main_bar_friends"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -68,13 +71,29 @@
             android:onClick="toFriends"/>
 
         <TextView
-            android:background="@color/background_floating_material_dark"
+            android:background="@color/grass_green"
+            android:textColor="@color/abc_primary_text_disable_only_material_dark"
+            android:paddingTop="16dp"
+            android:paddingBottom="16dp"
+            android:gravity="center"
+            android:id="@+id/messageTab"
+            android:text="@string/main_bar_messages"
+            android:textSize="14sp"
+            android:layout_weight="1"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:onClick="toMessages"/>
+
+        <TextView
+            android:background="@color/grass_green"
             android:textColor="@color/abc_primary_text_disable_only_material_dark"
             android:paddingTop="16dp"
             android:paddingBottom="16dp"
             android:gravity="center"
             android:id="@+id/optionsTab"
-            android:text="Options"
+            android:text="@string/main_bar_options"
+            android:textSize="14sp"
             android:layout_weight="1"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -87,7 +106,7 @@
         android:layout_height="match_parent"
         android:layout_width="match_parent"
         android:id="@+id/main"
-        android:layout_below="@+id/linearLayout" />
+        android:layout_below="@+id/mainBarHolder" />
 
 </RelativeLayout>
 

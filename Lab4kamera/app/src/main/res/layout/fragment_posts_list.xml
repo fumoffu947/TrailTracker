@@ -7,23 +7,29 @@
 
     <Button
         android:id="@+id/postFragmentUpdatePostsButton"
-        android:text="Upate"
-        android:textSize="10dp"
-        android:background="@color/background_floating_material_dark"
-        android:layout_width="wrap_content"
+        android:clickable="true"
+        android:focusable="true"
+        android:text="@string/posts_update_button"
+        android:textSize="12sp"
+        android:background="@color/grass_green"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/abc_primary_text_disable_only_material_dark"/>
 
-    <FrameLayout  android:layout_width="match_parent"
+    <FrameLayout
+        android:id="@+id/postFragmentListHolder"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_below="@id/postFragmentUpdatePostsButton"
         >
 
         <ListView android:id="@android:id/list" android:layout_width="match_parent"
             android:layout_height="match_parent" />
 
         <TextView android:id="@android:id/empty" android:layout_width="match_parent"
-            android:layout_height="match_parent" android:gravity="center" />
+            android:layout_height="match_parent" android:gravity="center"/>
 
     </FrameLayout>
 </RelativeLayout>

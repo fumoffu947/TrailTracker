@@ -33,6 +33,7 @@ public class HttpClient {
         int httpResult;
         StringBuffer br;
         try {
+            // sets the url link
             URL url = new URL(uriToServer + appendix);
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setDoOutput(true);
@@ -40,14 +41,17 @@ public class HttpClient {
             urlConnection.setRequestProperty("Content-type", "application/json");
             urlConnection.connect();
 
+            // send data
             OutputStreamWriter printOut = new OutputStreamWriter(urlConnection.getOutputStream());
             printOut.write(jsonObject.toString());
             printOut.flush();
             printOut.close();
 
+            // prints out the response code to terminal (remove)
             httpResult = urlConnection.getResponseCode();
             System.out.println(httpResult);
 
+            // reads in the response
             BufferedReader in = new BufferedReader(new InputStreamReader(urlConnection.getInputStream()));
             br = new StringBuffer();
             String line;
@@ -59,6 +63,7 @@ public class HttpClient {
             if (urlConnection != null) urlConnection.disconnect();
         }
 
+        // returns the final result string
         return br.toString();
     }
 }

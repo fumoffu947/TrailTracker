@@ -1,32 +1,39 @@
 package com.example.phijo967.lab4kamera.adapter;
 
-import android.app.Activity;
+import android.app.Fragment;
+import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.text.Editable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phijo967.lab4kamera.JsonParse;
 import com.example.phijo967.lab4kamera.R;
-import com.example.phijo967.lab4kamera.SavedInfo;
-import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.Comment;
-import com.example.phijo967.lab4kamera.fragments.arrayadapterContent.PostItem;
+import com.example.phijo967.lab4kamera.datastruct.SavedInfo;
+import com.example.phijo967.lab4kamera.datastruct.Comment;
+import com.example.phijo967.lab4kamera.datastruct.PostItem;
+import com.example.phijo967.lab4kamera.fragments.MapFragmentGoogle;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.LatLngBounds;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -37,28 +44,26 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
 
     private final Context context;
     private List<PostItem> postItems;
-    private final HttpPostExecute httpPostExecute;
+    private final HttpPostExecute httpPostExecuteComment;
     private int currentPostItem;
 
     public MyListAdapter(Context context, int resource, List<PostItem> objects) {
         super(context, resource, objects);
         this.context = context;
         this.postItems = objects;
-        this.httpPostExecute = new HttpPostExecute() { // the interface to get tha data back from the postExecute from ascyktask
+        this.httpPostExecuteComment = new HttpPostExecute() { // the interface to get tha data back from the postExecute from ascyktask
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
                 String res = JsonParse.resultParse(jsonObject);
                 if (res.equals("comment was added to post")) { // if it was a success
                     Toast.makeText(getContext(),"Comment was added", Toast.LENGTH_SHORT).show();
                 }
-                else { // is it went wrong remove it and notify user
+                else { // it went wrong remove it and notify user
                     Toast.makeText(getContext(), "Failed to add comment", Toast.LENGTH_SHORT).show();
                     Toast.makeText(getContext(), "Pleas try again later", Toast.LENGTH_SHORT).show();
                     postItems.get(currentPostItem).comments.remove(postItems.get(currentPostItem).comments.size()-1);
                     notifyDataSetChanged();
                 }
-
-
             }
         };
     }
@@ -73,6 +78,9 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
         public LinearLayout linearLayoutComment;
         public EditText commentEdit;
         public Button addCommentButton;
+        public Button likeButton;
+        public HttpPostExecute httpPostExecuteLike;
+        public TextView showMapButton;
     }
 
     @Override
@@ -85,16 +93,22 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
 
             // configure the ViewHolder
             ViewHolder viewHolder = new ViewHolder();
+
             viewHolder.nameOfPost = (TextView) rootView.findViewById(R.id.postName);
             viewHolder.descriptionOfPost = (TextView) rootView.findViewById(R.id.postDescription);
             viewHolder.userName = (TextView) rootView.findViewById(R.id.postUserName);
             viewHolder.userLastname = (TextView) rootView.findViewById(R.id.postUserLastname);
-            viewHolder.likes = (TextView) rootView.findViewById(R.id.postLikes);
+            viewHolder.likes = (TextView) rootView.findViewById(R.id.postNumberOfLikes);
+
             viewHolder.linearLayoutPic = (LinearLayout) rootView.findViewById(R.id.postLinearLayoutPic);
             viewHolder.linearLayoutComment = (LinearLayout) rootView.
                     findViewById(R.id.postLinearLayoutComment);
             viewHolder.commentEdit = (EditText) rootView.findViewById(R.id.postAddCommentEdit);
+
             viewHolder.addCommentButton = (Button) rootView.findViewById(R.id.postPostComment);
+            viewHolder.likeButton = (Button) rootView.findViewById(R.id.postLikeButton);
+            viewHolder.showMapButton = (TextView) rootView.findViewById(R.id.postMapButton);
+
             rootView.setTag(viewHolder);
         }
 
@@ -109,17 +123,26 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
         holder.likes.setText(String.valueOf(postItem.likes));
 
         List<Comment> comments = postItem.comments;
-        List<List<Double>> postitionList = postItem.positionList;
+        final List<List<Double>> postitionList = postItem.positionList;
         List<Bitmap> photoList = postItem.photoList;
 
-        holder.linearLayoutComment.removeAllViews(); // remove the comments from befor
+        holder.linearLayoutComment.removeAllViews(); // remove the comments from before adding them
+        holder.linearLayoutPic.removeAllViews(); // remove the pictures from before adding them
 
-        for (int index = 0; index < comments.size(); index++) { // dynamically add comments
+        for (int index = 0; index < comments.size(); index++) { // dynamically add comments in new TextView
             String lineSep = System.getProperty("line.separator");
             TextView comment = new TextView(context);
             Comment subcomment = comments.get(index);
             comment.setText(subcomment.name+" "+subcomment.lastname+lineSep+subcomment.comment+lineSep);
             holder.linearLayoutComment.addView(comment);
+        }
+
+        for (int photoindex = 0; photoindex < photoList.size(); photoindex++) { // dynamicly add pictures
+            ImageView imageView = new ImageView(getContext());                  // in new ImagesView's
+            holder.linearLayoutPic.addView(imageView);
+            imageView.setImageBitmap(Bitmap.createScaledBitmap(photoList.get(photoindex),
+                    holder.linearLayoutPic.getMinimumHeight(),
+                    holder.linearLayoutPic.getMinimumHeight(), false));
         }
 
         holder.addCommentButton.setOnClickListener(new View.OnClickListener() { // an click listener for add comment
@@ -131,33 +154,82 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
                 postItem.comments.add(comment); // add it to show it until it failed
                 notifyDataSetChanged();
 
-                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute); // post the comment
-                HashMap<String, JSONObject> map = new HashMap<>();
-                JSONObject jsonObject = new JSONObject();
-                try {
-                    jsonObject.put("username", SavedInfo.username);
-                    jsonObject.put("password",SavedInfo.password);
-                    jsonObject.put("id_p", postItem.id_p);
-                    jsonObject.put("comment", commentEdit);
+                SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecuteComment, getContext()); // post the comment
+                if (task.inNetworkAvailable()) {
+                    //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
+                    HashMap<String, JSONObject> map = new HashMap<>();
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("username", SavedInfo.username); // pack necessary into to post a comment
+                        jsonObject.put("password", SavedInfo.password);
+                        jsonObject.put("id_p", postItem.id_p); // id of the current post
+                        jsonObject.put("comment", commentEdit);
 
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-                map.put("postcomment",jsonObject);
-                task.execute(map);
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    map.put("postcomment", jsonObject);
+                    task.execute(map);
 
-                currentPostItem = position; // save the postItems position in the list so that the comment can be removed if it fails
+                    currentPostItem = position; // save the postItems position in the list so that the comment can be removed if it fails
 
-                holder.commentEdit.setText("");
+                    holder.commentEdit.setText("");
+                }else Toast.makeText(getContext(), "No internet connection",Toast.LENGTH_SHORT).show();
 
             }
         });
-        return rootView;
-    }
 
-    public void addPostItem(PostItem postItem) {
-        postItems.add(postItem);
-        notifyDataSetChanged();
+        holder.httpPostExecuteLike = new HttpPostExecute() {
+            @Override
+            public void httpOnPostExecute(JSONObject jsonObject) { // sets the like info
+                String res = JsonParse.resultParse(jsonObject);
+                if (res.equals("invalidInput")) {
+                    Toast.makeText(getContext(),"Could not like. Try agin later.", Toast.LENGTH_SHORT).show();
+                }else if (res.equals("post was liked")) {
+                    postItem.likes += 1;
+                    holder.likes.setText(String.valueOf(postItem.likes));
+                }else {
+                    postItem.likes -= 1;
+                    holder.likes.setText(String.valueOf(postItem.likes));
+                }
+            }
+        };
+
+        // i dont set the info directly because it goes so fast to like
+        holder.likeButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SendHttpRequestTask task = new SendHttpRequestTask(holder.httpPostExecuteLike, getContext()); // post the like
+                if (task.inNetworkAvailable()) {
+                    //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
+                    HashMap<String, JSONObject> map = new HashMap<>();
+                    JSONObject jsonObject = new JSONObject();
+                    try {
+                        jsonObject.put("username", SavedInfo.username);
+                        jsonObject.put("password", SavedInfo.password);
+                        jsonObject.put("id_p", postItem.id_p);
+
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                    map.put("addremovelike", jsonObject);
+                    task.execute(map);
+                }else Toast.makeText(getContext(), "No internet connection",Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+        // set an listener to the textView to change to mapp fragment upon click
+        // i did the fragment transaction here to not have to call the mainActivity and do extra code
+        holder.showMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) { // switch to map fragment to show GoogleMap with current positionlist
+                Fragment mapFragment = MapFragmentGoogle.getInstance(postitionList);
+                SavedInfo.fragmentManager.beginTransaction().replace(R.id.main,  mapFragment).commit();
+            }
+        });
+
+        return rootView;
     }
 
     public void setPostItems(List<PostItem> postItems) {

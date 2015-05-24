@@ -1,18 +1,22 @@
 package com.example.phijo967.lab4kamera.fragments;
 
 import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phijo967.lab4kamera.JsonParse;
-import com.example.phijo967.lab4kamera.ProfileInfo;
+import com.example.phijo967.lab4kamera.datastruct.ProfileInfo;
 import com.example.phijo967.lab4kamera.R;
-import com.example.phijo967.lab4kamera.SavedInfo;
+import com.example.phijo967.lab4kamera.datastruct.SavedInfo;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
 
@@ -21,23 +25,7 @@ import org.json.JSONObject;
 
 import java.util.HashMap;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link com.example.phijo967.lab4kamera.fragments.ProfileScreen.OnProfileScreenInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ProfileScreen#newInstance} factory method to
- * create an instance of this fragment.
- */
 public class ProfileScreen extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnProfileScreenInteractionListener mListener;
     private HttpPostExecute httpPostExecute;
@@ -46,94 +34,72 @@ public class ProfileScreen extends Fragment {
     private TextView numberOfPaths;
     private TextView numberOfSteps;
     private TextView lengthWent;
-
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ProfileScreen.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ProfileScreen newInstance(String param1, String param2) {
-        ProfileScreen fragment = new ProfileScreen();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
-    public ProfileScreen() {
-        // Required empty public constructor
-    }
+    private ImageView profilepic;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        // the interface to take care of the result of user profile load
         this.httpPostExecute = new HttpPostExecute() {
             @Override
             public void httpOnPostExecute(JSONObject jsonObject) {
-                Bundle args = JsonParse.profileParse(jsonObject);
-                if (args.getString("result").equals("ok")) {
-                    SavedInfo.profileInfo = new ProfileInfo(args.getString("name"),
-                            args.getString("lastname"), args.getInt("numOfPath"),
-                            args.getInt("numberOfSteps"), args.getInt("lenghtWent"));
-                }
-                else {
-                    SavedInfo.profileInfo = new ProfileInfo("Failed to load","",0,0,0);
+                ProfileInfo profileInfo = JsonParse.profileParse(jsonObject);
+                SavedInfo.profileInfo = profileInfo;
+                 if (profileInfo.name.equals("Failed to load")) {
                     Toast.makeText(getActivity(),"Failed to load user", Toast.LENGTH_SHORT).show();
                 }
-                name.setText(SavedInfo.profileInfo.name);
+                name.setText(SavedInfo.profileInfo.name); // setts the new info in the fragment
                 lastname.setText(SavedInfo.profileInfo.lastname);
                 numberOfPaths.setText("Number of paths: "+SavedInfo.profileInfo.numberOfPaths);
-                numberOfSteps.setText("Number of steps: "+SavedInfo.profileInfo.numberOfSteps);
                 lengthWent.setText("Length went: "+SavedInfo.profileInfo.lengthWent);
+                if (SavedInfo.profileInfo.profilePic != null) {
+                    profilepic.setImageBitmap(SavedInfo.profileInfo.profilePic);
+                }
             }
         };
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
 
-        SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute);
-        HashMap<String, JSONObject> map = new HashMap<>();
-        JSONObject jsonObject = new JSONObject();
-        try {
-            jsonObject.put("username", SavedInfo.username);
-            jsonObject.put("password",SavedInfo.password);
-            jsonObject.put("id_u",SavedInfo.id_u);
+        // a httpPost to get the current user info
+        SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
+        if (task.inNetworkAvailable()) {
+            //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
+            HashMap<String, JSONObject> map = new HashMap<>();
+            JSONObject jsonObject = new JSONObject();
+            try {
+                jsonObject.put("username", SavedInfo.username); // necessary info to get current users info
+                jsonObject.put("password", SavedInfo.password);
+                jsonObject.put("id_u", SavedInfo.id_u);
 
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
-        map.put("getuser",jsonObject);
-        task.execute(map);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+            map.put("getuser", jsonObject);
+            task.execute(map);
+        } else Toast.makeText(getActivity(), "No internet connection",Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        //Tell mainactivity to add a PostFragment to the Framelayout in current layout so user info is set
         onInteraction("addPost");
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_profile_screen, container, false);
         this.name = (TextView) rootView.findViewById(R.id.profileScreenNameText);
         this.lastname = (TextView) rootView.findViewById(R.id.profileScreenLastnameText);
         this.numberOfPaths = (TextView) rootView.findViewById(R.id.profileScreenNumberOfPathsText);
-        this.numberOfSteps = (TextView) rootView.findViewById(R.id.profileScreenNumberOfStepsText);
         this.lengthWent = (TextView) rootView.findViewById(R.id.profileScreenLengthWentText);
+        this.profilepic = (ImageView) rootView.findViewById(R.id.profileScreenProfileImg);
         return rootView;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onInteraction(String s) {
         if (mListener != null) {
             mListener.onProfileScreenInteraction(s);
         }
     }
 
-    @Override
+    @Override // auto generated
     public void onAttach(Activity activity) {
         super.onAttach(activity);
         try {
@@ -144,24 +110,15 @@ public class ProfileScreen extends Fragment {
         }
     }
 
-    @Override
+    @Override // auto generated
     public void onDetach() {
         super.onDetach();
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
+
     public interface OnProfileScreenInteractionListener {
-        // TODO: Update argument type and name
+
         public void onProfileScreenInteraction(String s);
     }
 

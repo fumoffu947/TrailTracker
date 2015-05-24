@@ -1,4 +1,4 @@
-package com.example.phijo967.lab4kamera.fragments;
+package com.example.phijo967.lab4kamera.datastruct;
 
 /**
  * Created by fumoffu on 2015-05-11.
