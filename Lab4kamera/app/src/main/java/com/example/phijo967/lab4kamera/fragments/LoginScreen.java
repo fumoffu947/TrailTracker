@@ -73,7 +73,7 @@ public class LoginScreen extends Fragment {
             @Override
             public void onClick(View v) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     EditText usernameE = (EditText) rootView.findViewById(R.id.signUpUsernameEdit);
                     EditText passwordE = (EditText) rootView.findViewById(R.id.signUpPasswordEdit);
                     username = usernameE.getText().toString();

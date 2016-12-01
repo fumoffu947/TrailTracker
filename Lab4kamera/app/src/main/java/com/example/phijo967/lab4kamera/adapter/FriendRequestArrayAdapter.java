@@ -18,11 +18,9 @@ import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.HashMap;
 import java.util.List;
-import java.util.zip.Inflater;
 
 /**
  * Created by fumoffu947 on 2015-05-20.
@@ -86,7 +84,7 @@ public class FriendRequestArrayAdapter extends ArrayAdapter<Friend> {
             @Override
             public void onClick(View v) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getContext()); // post the comment
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();
@@ -109,7 +107,7 @@ public class FriendRequestArrayAdapter extends ArrayAdapter<Friend> {
             @Override
             public void onClick(View v) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getContext()); // post the comment
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();

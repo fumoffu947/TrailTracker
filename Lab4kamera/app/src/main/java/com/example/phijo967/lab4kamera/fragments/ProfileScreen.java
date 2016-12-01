@@ -1,11 +1,8 @@
 package com.example.phijo967.lab4kamera.fragments;
 
 import android.app.Activity;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.app.Fragment;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -61,7 +58,7 @@ public class ProfileScreen extends Fragment {
 
         // a httpPost to get the current user info
         SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-        if (task.inNetworkAvailable()) {
+        if (task.isNetworkAvailable()) {
             //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
             HashMap<String, JSONObject> map = new HashMap<>();
             JSONObject jsonObject = new JSONObject();

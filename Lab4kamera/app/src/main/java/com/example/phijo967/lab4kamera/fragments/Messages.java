@@ -1,6 +1,5 @@
 package com.example.phijo967.lab4kamera.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.app.ListFragment;
 import android.view.LayoutInflater;
@@ -8,7 +7,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.phijo967.lab4kamera.JsonParse;
@@ -85,7 +83,7 @@ public class Messages extends ListFragment {
                 if (checkMessageLenght(message)) return;
 
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecuteAddMessage, getActivity());
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();
@@ -111,7 +109,7 @@ public class Messages extends ListFragment {
 
         // get all the messages upon fragment creation
         SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecuteAllMessages, getActivity());
-        if (task.inNetworkAvailable()) {
+        if (task.isNetworkAvailable()) {
             //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
             HashMap<String, JSONObject> map = new HashMap<>();
             JSONObject jsonObject = new JSONObject();

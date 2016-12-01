@@ -323,6 +323,10 @@ public class MainActivity extends ActionBarActivity implements GoogleApiClient.C
         SavedInfo.picturesList = new ArrayList<>();
         SavedInfo.gPSPositions = new ArrayList<>();
         SavedInfo.mMapFragment = null;
+        // stops the location update
+        if (SavedInfo.mGoogleApiClient != null && SavedInfo.locationListener != null && SavedInfo.mGoogleApiClient.isConnected()) {
+            LocationServices.FusedLocationApi.removeLocationUpdates(SavedInfo.mGoogleApiClient, SavedInfo.locationListener);
+        }
     }
 
     @Override

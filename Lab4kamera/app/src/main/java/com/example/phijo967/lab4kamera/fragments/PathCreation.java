@@ -26,6 +26,10 @@ import com.example.phijo967.lab4kamera.R;
 import com.example.phijo967.lab4kamera.datastruct.SavedInfo;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -34,6 +38,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -48,6 +53,7 @@ public class PathCreation extends Fragment {
 
     private OnPathCreationInteractionListener mListener;
     private TextView pathCreationLenghtWent;
+    private Button startEndTracking;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,9 +70,12 @@ public class PathCreation extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+                             final Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_path_creation, container, false);
+
+
+
 
         SavedInfo.activity = getActivity();
 
@@ -85,7 +94,7 @@ public class PathCreation extends Fragment {
 
         SavedInfo.picHolderLayout = (LinearLayout) rootView.findViewById(R.id.pathCreationPicHolderLayout);
         Button addPic = (Button) rootView.findViewById(R.id.pathCreationAddPictureButton);
-        final Button startEndTracking = (Button) rootView.findViewById(R.id.pathCreationStartPositionTrackingButton);
+        this.startEndTracking = (Button) rootView.findViewById(R.id.pathCreationStartPositionTrackingButton);
         Button postPath = (Button) rootView.findViewById(R.id.pathCreationPostPathButton);
 
         // set onClickListener to post the path
@@ -95,7 +104,7 @@ public class PathCreation extends Fragment {
                 if (checkIfOkInput()) return;
 
                 SendHttpRequestTask task = new SendHttpRequestTask(SavedInfo.httpPostExecute, getActivity());
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();
@@ -131,35 +140,67 @@ public class PathCreation extends Fragment {
             }
         });
 
-        if (SavedInfo.isTracking) { // if the timer gets the gps positions the change the text on button
-            startEndTracking.setText("Stop Tracking");
-        }
+
 
         // start and stop tracking positions with gps and set the text
         startEndTracking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (!SavedInfo.isTracking) {
-                    // checks so that gps is active  else it start the gps window in android so the user has to activate it
+                    // chacks if the gps is active
                     LocationManager locationManager = (LocationManager) getActivity().getSystemService(Context.LOCATION_SERVICE);
-                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-                        startTimerGetGpsLocation();
+                    if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) && SavedInfo.mGoogleApiClient.isConnected()) {
+                        // starts a lcation updater requester
+                        LocationRequest locationRequest = new LocationRequest();
+                        locationRequest.setFastestInterval(5000);
+                        locationRequest.setInterval(10000);
+                        // listener to get the location from locationUpdates
+                        SavedInfo.locationListener = new LocationListener() {
+                            @Override
+                            public void onLocationChanged(Location location) {
+                                System.out.println(String.valueOf(location.getLatitude()) + String.valueOf(location.getLongitude()));
+                                if (location != null) {
+                                    List<Double> positions = new ArrayList<>();
+                                    positions.add(location.getLatitude());
+                                    positions.add(location.getLongitude());
+                                    SavedInfo.gPSPositions.add(positions);
+                                }
+                                // sets markers and lines
+                                SavedInfo.mMapFragment.getMapAsync(new OnMapReadyCallback() { // has to be called from main thread
+                                    @Override
+                                    public void onMapReady(GoogleMap googleMap) {
+                                        setGoogleMarkers();
+                                    }
+                                });
+                            }
+                        };
+                        // starts a location update with evn intervals
+                        SavedInfo.locationUpdater = LocationServices.FusedLocationApi.requestLocationUpdates(SavedInfo.mGoogleApiClient, locationRequest, SavedInfo.locationListener);
+                        SavedInfo.isTracking = true;
                         startEndTracking.setText("Stop Tracking");
                     }else startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
-                }else {
-                    SavedInfo.getGPSPosTimer.cancel();
+                } else {
                     startEndTracking.setText("Start Tracking");
-                    Toast.makeText(getActivity(), SavedInfo.gPSPositions.toString(), Toast.LENGTH_SHORT).show();
                     SavedInfo.isTracking = false;
+                    // stops the update (removes the updater)
+                    LocationServices.FusedLocationApi.removeLocationUpdates(SavedInfo.mGoogleApiClient,SavedInfo.locationListener);
                 }
             }
         });
 
-        setPictures();
-
         setGoogleMarkers();
 
         return rootView;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        SavedInfo.activity = getActivity();
+        setPictures();
+        if (SavedInfo.isTracking) { // if the timer gets the gps positions the change the text on button
+            startEndTracking.setText("Stop Tracking");
+        }
     }
 
     private boolean checkIfOkInput() { // checks input of the path Name to se if is to long or to short
@@ -184,6 +225,7 @@ public class PathCreation extends Fragment {
                 Double minLng = null;
                 Double maxLat = null;
                 Double maxLng = null;
+                PolylineOptions polylineOptions = new PolylineOptions();
 
                 for (int index = 0; index < SavedInfo.gPSPositions.size(); index++) {
                     Double latitude = SavedInfo.gPSPositions.get(index).get(0);
@@ -206,16 +248,26 @@ public class PathCreation extends Fragment {
 
 
                     // add marker on the map
+                    LatLng latLng = new LatLng(latitude, longitude);
                     googleMap.addMarker(new MarkerOptions().position(
-                            new LatLng(latitude, longitude)).
+                            latLng).
                             title(String.valueOf(index)));
+
+                    polylineOptions.add(latLng);
                 }
+                googleMap.addPolyline(polylineOptions);
 
                 // move the camera so that the markers is in the view
                 if (minLat != null && minLng != null && maxLat != null && maxLng != null) {
                     LatLngBounds bounds = new LatLngBounds(new LatLng(minLat, minLng),
                             new LatLng(maxLat, maxLng));
-                    googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+                    try {
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 100));
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        // if View is to small
+                        googleMap.moveCamera(CameraUpdateFactory.newLatLngBounds(bounds, 10));
+                    }
                 }
 
                 // calculates the distance between the positions and set it to a TextView
@@ -257,53 +309,6 @@ public class PathCreation extends Fragment {
             currentImageView.setImageBitmap(bitmap);
         }
     }
-
-    /**
-     * Starts a timer to get the Gps positions with even intervals and after every new gps position
-     * get the mainTread and start the getMapAsync and to remove all markers and add them again
-     */
-    public void startTimerGetGpsLocation() {
-        if (SavedInfo.mGoogleApiClient.isConnected()) {
-            TimerTask locationGPS = new TimerTask() {
-                @Override
-                public void run() {
-                    getLocation();
-                }
-            };
-            SavedInfo.getGPSPosTimer = new Timer("GPS", false); // starts a timer go det positions on evan intervals
-            SavedInfo.getGPSPosTimer.schedule(locationGPS, 10000, 30000);
-            SavedInfo.isTracking = true;
-        }else {
-            SavedInfo.mGoogleApiClient.connect();
-        }
-    }
-
-    private void getLocation() {
-        if (SavedInfo.mGoogleApiClient.isConnected()) { // get the location and add it to position list
-            final Location location = LocationServices.FusedLocationApi.getLastLocation(SavedInfo.mGoogleApiClient);
-            if (location != null) {
-                List<Double> positions = new ArrayList<>();
-                positions.add(location.getLatitude());
-                positions.add(location.getLongitude());
-                SavedInfo.gPSPositions.add(positions);
-                SavedInfo.activity.runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() { // starts a main thread to get the map async and add the markers
-                        if (SavedInfo.mMapFragment != null) {
-                        SavedInfo.mMapFragment.getMapAsync(new OnMapReadyCallback() { // has to be called from main thread
-                            @Override
-                            public void onMapReady(GoogleMap googleMap) {
-                                setGoogleMarkers();
-                            }
-                        });}
-                        Thread.currentThread().interrupt(); // stops
-                    }
-                });
-
-            }
-        }else SavedInfo.mGoogleApiClient.connect();
-    }
-
 
     public void takePicture() {
         if (mListener != null) {

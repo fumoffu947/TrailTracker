@@ -76,7 +76,7 @@ public class MyFriendAdapter extends ArrayAdapter<Friend> {
             @Override
             public void onClick(View v) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getContext()); // post the comment
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();

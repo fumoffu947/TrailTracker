@@ -8,6 +8,10 @@ import android.widget.LinearLayout;
 
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.Status;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.maps.MapFragment;
 
 import java.util.ArrayList;
@@ -57,7 +61,9 @@ public class SavedInfo {
     public static int removePositionRequest;
     public static boolean searchFriendInFriends = false;
     public static MapFragment mMapFragment;
-    public static Float totalDistance;
+    public static Float totalDistance = Float.valueOf(0);
+    public static PendingResult<Status> locationUpdater;
+    public static LocationListener locationListener;
 
     public static void clearSavedInfo() {
         id_u = null;

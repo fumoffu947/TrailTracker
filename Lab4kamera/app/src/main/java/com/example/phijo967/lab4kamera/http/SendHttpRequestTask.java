@@ -33,7 +33,7 @@ public class SendHttpRequestTask extends AsyncTask<HashMap<String, JSONObject>,S
         this.context = context;
     }
 
-    public boolean inNetworkAvailable() {
+    public boolean isNetworkAvailable() {
         ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connectivityManager.getActiveNetworkInfo();
         return networkInfo != null && networkInfo.isConnected();
@@ -76,7 +76,9 @@ public class SendHttpRequestTask extends AsyncTask<HashMap<String, JSONObject>,S
     @Override
     protected void onPostExecute(JSONObject jsonObject) {
         // remove the loading image and send the data back
-        mDialoge.dismiss();
+        if (mDialoge != null) {
+            mDialoge.dismiss();
+        }
         httpPostExecute.httpOnPostExecute(jsonObject);
     }
 }

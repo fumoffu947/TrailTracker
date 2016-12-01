@@ -112,7 +112,7 @@ public class SignUp extends Fragment {
 
                 if (checkIfOkInput(name, lastname, email, username, password, passwordVerification)) return;
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
 
                     JSONObject jsonObject = new JSONObject();
                     try { // adds a user if input is ok

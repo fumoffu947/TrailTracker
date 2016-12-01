@@ -17,6 +17,7 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.List;
 
@@ -61,6 +62,7 @@ public class MapFragmentGoogle extends Fragment {
                 Double minLng = null;
                 Double maxLat = null;
                 Double maxLng = null;
+                PolylineOptions polylineOptions = new PolylineOptions();
 
                 for (int index = 0; index < postitionList.size(); index++) {
                     Double latitude = postitionList.get(index).get(0);
@@ -82,10 +84,14 @@ public class MapFragmentGoogle extends Fragment {
                     } else maxLng = Math.max(maxLng, longitude);
 
                     // add a marker for current position in list
+                    LatLng latLng = new LatLng(latitude, longitude);
                     googleMap.addMarker(new MarkerOptions().position(
-                            new LatLng(latitude, longitude)).
+                            latLng).
                             title(String.valueOf(index)));
+
+                    polylineOptions.add(latLng);
                 }
+                googleMap.addPolyline(polylineOptions);
 
                 // change the camera position to be over the markers
                 if (minLat != null && minLng != null && maxLat != null && maxLng != null) {

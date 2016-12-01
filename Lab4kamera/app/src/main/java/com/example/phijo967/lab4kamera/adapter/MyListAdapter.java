@@ -1,7 +1,6 @@
 package com.example.phijo967.lab4kamera.adapter;
 
 import android.app.Fragment;
-import android.app.FragmentTransaction;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
@@ -23,13 +22,6 @@ import com.example.phijo967.lab4kamera.datastruct.PostItem;
 import com.example.phijo967.lab4kamera.fragments.MapFragmentGoogle;
 import com.example.phijo967.lab4kamera.http.HttpPostExecute;
 import com.example.phijo967.lab4kamera.http.SendHttpRequestTask;
-import com.google.android.gms.maps.CameraUpdateFactory;
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapFragment;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.LatLngBounds;
-import com.google.android.gms.maps.model.MarkerOptions;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -155,7 +147,7 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
                 notifyDataSetChanged();
 
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecuteComment, getContext()); // post the comment
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();
@@ -200,7 +192,7 @@ public class MyListAdapter extends ArrayAdapter<PostItem> {
             @Override
             public void onClick(View v) {
                 SendHttpRequestTask task = new SendHttpRequestTask(holder.httpPostExecuteLike, getContext()); // post the like
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();

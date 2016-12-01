@@ -2,7 +2,6 @@ package com.example.phijo967.lab4kamera.fragments;
 
 import android.app.Activity;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -31,7 +29,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.BitSet;
 import java.util.HashMap;
 import java.util.List;
 
@@ -43,6 +40,7 @@ public class Options extends Fragment {
     private HttpPostExecute httpPostExecute;
     private AbsListView mListView;
     private HttpPostExecute httpPostExecuteProfileUpdatePic;
+    private ImageView profileImg;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,12 +81,8 @@ public class Options extends Fragment {
         final Button takePictureButton = (Button) rootView.findViewById(R.id.optionTakePictureButton);
         Button updateProfilePicture = (Button) rootView.findViewById(R.id.optionUpdateProfilePicture);
         Button updateFriendRequests = (Button) rootView.findViewById(R.id.optionsUpdateFriendRequestsButton);
-        final ImageView profileImg = (ImageView) rootView.findViewById(R.id.optionProfileImg);
+        this.profileImg = (ImageView) rootView.findViewById(R.id.optionProfileImg);
         SavedInfo.picHolderLayout = (LinearLayout) rootView.findViewById(R.id.optionsPicHolder);
-
-        if (!SavedInfo.picturesList.isEmpty()) {
-            profileImg.setImageBitmap(SavedInfo.picturesList.get(0));
-        }
 
         // takes a picture
         takePictureButton.setOnClickListener(new View.OnClickListener() {
@@ -108,7 +102,7 @@ public class Options extends Fragment {
                     String photoString = MainActivity.bitmapToBase64(bitmaps); // make the pictures to strings and
 
                     SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecuteProfileUpdatePic, getActivity());
-                    if (task.inNetworkAvailable()) {
+                    if (task.isNetworkAvailable()) {
                         //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                         HashMap<String, JSONObject> map = new HashMap<>();
                         JSONObject jsonObject = new JSONObject();
@@ -149,11 +143,21 @@ public class Options extends Fragment {
         return rootView;
     }
 
+    private void setPic() {
+        if (!SavedInfo.picturesList.isEmpty()) {
+            profileImg.setImageBitmap(SavedInfo.picturesList.get(0));
+        }
+    }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setPic();
+    }
 
     private void getFriendRequests() {
         SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-        if (task.inNetworkAvailable()) {
+        if (task.isNetworkAvailable()) {
             //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
             HashMap<String, JSONObject> map = new HashMap<>();
             JSONObject jsonObject = new JSONObject();

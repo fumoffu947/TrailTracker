@@ -2,10 +2,7 @@ package com.example.phijo967.lab4kamera.fragments;
 
 import android.app.Activity;
 import android.app.ListFragment;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +12,6 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phijo967.lab4kamera.JsonParse;
@@ -101,7 +97,7 @@ public class FriendsFragment extends ListFragment {
         // if not in search get the current users friends
         if (!isSearch) {
             SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecuteGetFriends, getActivity());
-            if (task.inNetworkAvailable()) {
+            if (task.isNetworkAvailable()) {
                 //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                 HashMap<String, JSONObject> map = new HashMap<>();
                 JSONObject jsonObject = new JSONObject();
@@ -142,7 +138,7 @@ public class FriendsFragment extends ListFragment {
                 String partusernameSearch = searchEdit.getText().toString();
 
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecuteFriendSearch, getActivity());
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();

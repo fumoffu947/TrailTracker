@@ -45,7 +45,7 @@ public class FriendMessagesFragment extends ListFragment {
 
         // do an httpPost to get the friends of the current user
         SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-        if (task.inNetworkAvailable()) {
+        if (task.isNetworkAvailable()) {
             //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
             HashMap<String, JSONObject> map = new HashMap<>();
             JSONObject jsonObject = new JSONObject();

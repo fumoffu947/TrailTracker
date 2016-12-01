@@ -1,6 +1,5 @@
 package com.example.phijo967.lab4kamera.fragments;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -11,7 +10,6 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ListAdapter;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.phijo967.lab4kamera.JsonParse;
@@ -78,7 +76,7 @@ public class PostsFragment extends Fragment {
             // if update is presed then posts is updated
             if(SavedInfo.userpost.isEmpty() || this.update) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();
@@ -102,7 +100,7 @@ public class PostsFragment extends Fragment {
             // updates the userflow
             if (SavedInfo.userflow.isEmpty() || this.update) {
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();

@@ -1,7 +1,5 @@
 package com.example.phijo967.lab4kamera.fragments;
 
-import android.app.Activity;
-import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.view.LayoutInflater;
@@ -67,6 +65,7 @@ public class SearchProfile extends Fragment {
         lastname.setText(SavedInfo.searchProfile.lastname);
         numberOfPaths.setText("Number of paths: "+SavedInfo.searchProfile.numberOfPaths);
         lengthWent.setText("Length went: "+SavedInfo.searchProfile.lengthWent);
+
         if (SavedInfo.searchProfile.profilePic != null) {
             profilePic.setImageBitmap(SavedInfo.searchProfile.profilePic);
         }
@@ -83,7 +82,7 @@ public class SearchProfile extends Fragment {
             public void onClick(View v) {
                 if (!SavedInfo.searchFriendInFriends) { // if current search user is in current users friends then add friendrequest to that user
                     SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-                    if (task.inNetworkAvailable()) {
+                    if (task.isNetworkAvailable()) {
                         //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                         HashMap<String, JSONObject> map = new HashMap<>();
                         JSONObject jsonObject = new JSONObject();
@@ -101,7 +100,7 @@ public class SearchProfile extends Fragment {
                     } else Toast.makeText(getActivity(), "No internet connection",Toast.LENGTH_SHORT).show();
                 } else { // if in friends then remove the friend
                     SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-                    if (task.inNetworkAvailable()) {
+                    if (task.isNetworkAvailable()) {
                         //the HashMAp<String, JsonObject> is for setting the string ass the url and jsonobj is the data to send to that url
                         HashMap<String, JSONObject> map = new HashMap<>();
                         JSONObject jsonObject = new JSONObject();
@@ -125,7 +124,7 @@ public class SearchProfile extends Fragment {
             @Override
             public void onClick(View v) { // follow or onfollow user depending on what is in the database
                 SendHttpRequestTask task = new SendHttpRequestTask(httpPostExecute, getActivity());
-                if (task.inNetworkAvailable()) {
+                if (task.isNetworkAvailable()) {
                     HashMap<String, JSONObject> map = new HashMap<>();
                     JSONObject jsonObject = new JSONObject();
                     try {
